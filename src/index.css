@@ -155,7 +155,7 @@ legend { padding:0 8px; color:#35425a; font-weight:800; }
 .guiada { border-top:4px solid var(--primary); }
 .guiada input { min-height:56px; font-size:18px; }
 .pasos { display:flex; flex-wrap:wrap; gap:7px; margin:22px 0; padding:0; list-style:none; }
-.pasos li { padding:7px 11px; border-radius:999px; background:#f0f2f6; color:#6c778b; font-size:13px; font-weight:750; }
+.pasos li { padding:7px 11px; border-radius:999px; background:#f0f2f6; color:#4e5b71; font-size:13px; font-weight:750; }
 .pasos li.on { background:var(--blue-soft); color:var(--primary-dark); }
 .nav-pasos, .acciones-confirmacion, .appointment-actions { display:flex; flex-wrap:wrap; gap:9px; margin-top:18px; }
 .docs { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; padding:0; list-style:none; }
@@ -177,6 +177,8 @@ dt { color:var(--muted); font-size:12px; font-weight:750; text-transform:upperca
 dd { margin:3px 0 0; font-weight:750; }
 
 .appointment-list { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; }
+.reminder-list { list-style:none; padding:0; }
+.reminder-list h3, .reminder-list p { margin:6px 0; }
 .appointment-card { padding:20px; border:1px solid var(--line); border-radius:16px; background:#fff; box-shadow:0 6px 20px rgba(24,38,66,.05); }
 .appointment-card h3, .appointment-card p { margin:3px 0; }
 .status { display:inline-flex; padding:4px 9px; border-radius:999px; font-size:12px; font-weight:850; }
@@ -191,7 +193,7 @@ th, td { padding:12px; border-bottom:1px solid var(--line); text-align:left; }
 thead { background:#f2f5fa; }
 .calendar-table { min-width:760px; }
 .calendar-table .free { color:#076847; font-weight:750; }
-.calendar-table .occ { color:#8791a3; }
+.calendar-table .occ { color:#4e5b71; }
 .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0, 0, 0, 0); white-space:nowrap; border:0; }
 
 .alert { margin:12px 0; padding:13px 15px; border:1px solid #e4ce85; border-radius:11px; background:#fff8dc; }
@@ -255,6 +257,9 @@ footer strong { color:var(--ink); }
 }
 
 /* Jerarquía de tareas y ajustes transversales de lectura. */
+.utility-shell { height:auto; padding-top:12px; }
+.preferencias { top:0; }
+main { padding-top:18px; }
 .app { background:var(--page); }
 .brand-mark { background:var(--primary); box-shadow:none; border-radius:50%; }
 .hero { background:#143e38; box-shadow:none; min-height:320px; }

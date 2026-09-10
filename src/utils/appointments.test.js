@@ -1,6 +1,23 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { generarCodigo, obtenerHorariosDisponibles, quitarDatosSensibles, validarIdentificador } from "./appointments.js";
+import { generarCodigo, obtenerHorariosDisponibles, obtenerProximasCitas, quitarDatosSensibles, validarIdentificador } from "./appointments.js";
+
+test("recordatorios ordenados: excluye citas pasadas, canceladas y atendidas", () => {
+  const ahora = new Date("2026-09-08T10:00:00");
+  const base = { fecha: "2026-09-08", hora: "11:00", estado: "Pendiente" };
+  const citas = [
+    { ...base, id: "futura", fecha: "2026-09-09" },
+    { ...base, id: "pasada", hora: "09:00" },
+    { ...base, id: "cancelada", estado: "Cancelada" },
+    { ...base, id: "atendida", estado: "Atendida" },
+    { ...base, id: "hoy" },
+  ];
+  assert.deepEqual(obtenerProximasCitas(citas, ahora).map(c => c.id), ["hoy", "futura"]);
+  assert.equal(citas[0].id, "futura");
+  const cambiadas = citas.map(c => c.id === "hoy" ? { ...c, fecha: "2026-09-10" } : c);
+  assert.deepEqual(obtenerProximasCitas(cambiadas, ahora).map(c => c.id), ["futura", "hoy"]);
+  assert.deepEqual(obtenerProximasCitas([], ahora), []);
+});
 
 test("solo acepta los ultimos cuatro digitos", () => {
   assert.equal(validarIdentificador("1234"), true);

@@ -31,6 +31,12 @@ export function validarIdentificador(valor) {
   return /^\d{4}$/.test(valor);
 }
 
+export function obtenerProximasCitas(citas, ahora = new Date()) {
+  return citas
+    .filter((cita) => cita.estado === "Pendiente" && new Date(cita.fecha + "T" + cita.hora) >= ahora)
+    .sort((a, b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora));
+}
+
 export function generarCodigo(ahora = Date.now()) {
   return `IHM-${ahora.toString(36).toUpperCase().slice(-7)}`;
 }

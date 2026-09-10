@@ -1,6 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { especialistas, ejercicios, centroInfo } from "../data/mock";
-import { fechaLocal, obtenerHorariosDisponibles } from "../utils/appointments";
+import { fechaLocal, obtenerHorariosDisponibles, obtenerProximasCitas } from "../utils/appointments";
+
+function Recordatorios({ citas }) {
+  const [ahora, setAhora] = useState(() => new Date());
+  useEffect(() => {
+    const reloj = setInterval(() => setAhora(new Date()), 30000);
+    return () => clearInterval(reloj);
+  }, []);
+  const proximas = obtenerProximasCitas(citas, ahora);
+  return <section className="card" aria-labelledby="recordatorios-titulo">
+    <h2 id="recordatorios-titulo">Tus próximos recordatorios</h2>
+    <p className="muted">Se actualizan con las citas pendientes de esta sesión.</p>
+    {proximas.length === 0 ? <p role="status">No tienes citas pendientes por venir. Al confirmar una cita, aparecerá aquí.</p> :
+      <ul className="reminder-list">{proximas.map((cita) => <li key={cita.id} className="alert">
+        <h3>{cita.esp}</h3>
+        <p>{cita.especialista}</p>
+        <p><time dateTime={cita.fecha + "T" + cita.hora}>{new Date(cita.fecha + "T" + cita.hora).toLocaleString("es-EC", { dateStyle: "full", timeStyle: "short" })}</time></p>
+        <p>Llega 15 minutos antes de tu cita.</p>
+      </li>)}</ul>}
+    <p className="alert info">Recuerda traer tu documento de identificación y orden médica.</p>
+  </section>;
+}
 
 function RegistroForm() {
   const [datos, setDatos] = useState({ nombre: "", correo: "" });
@@ -124,11 +145,7 @@ export default function InfoPanels({ seccion, citas, onChangeStatus, onReschedul
     <div className="exercise-grid">{ejercicios.slice(1).map((item) => <article key={item.id} className="eje"><h3>{item.titulo}</h3><p><strong>Nivel:</strong> {item.nivel}</p><p>{item.desc}</p></article>)}</div>
   </section>;
 
-  if (seccion === "recordatorios") return <section className="card" aria-labelledby="recordatorios-titulo">
-    <h2 id="recordatorios-titulo">Recordatorios de demostración</h2>
-    <div className="alert">Mañana tienes terapia a las 09:00. Llega 15 minutos antes.</div>
-    <div className="alert info">Recuerda traer tu documento de identificación y orden médica.</div>
-  </section>;
+  if (seccion === "recordatorios") return <Recordatorios citas={citas} />;
 
   if (seccion === "centros") return <section className="card" aria-labelledby="centros-titulo">
     <h2 id="centros-titulo">Información del centro</h2>

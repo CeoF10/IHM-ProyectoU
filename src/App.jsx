@@ -52,7 +52,41 @@ function Preferencias({ valor, onChange }) {
 
 function Confirmacion({ cita, esReprogramacion, onModificar, onConfirmar }) {
   const headingRef = useRef(null);
-  useEffect(() => { headingRef.current?.focus(); }, []);
+  const [vozEstado, setVozEstado] = useState("");
+  const lecturaRef = useRef(null);
+  useEffect(() => {
+    headingRef.current?.focus();
+    return () => {
+      if (lecturaRef.current) {
+        lecturaRef.current.onend = null;
+        lecturaRef.current.onerror = null;
+        window.speechSynthesis?.cancel();
+      }
+    };
+  }, []);
+  const escucharResumen = () => {
+    if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) {
+      setVozEstado("La lectura por voz no está disponible. Puedes consultar el resumen escrito.");
+      return;
+    }
+    try {
+      if (lecturaRef.current) {
+        lecturaRef.current.onend = null;
+        lecturaRef.current.onerror = null;
+      }
+      window.speechSynthesis.cancel();
+      const fecha = new Date(cita.fecha + "T" + cita.hora).toLocaleString("es-EC", { dateStyle: "full", timeStyle: "short" });
+      const lectura = new SpeechSynthesisUtterance("Resumen de tu solicitud. Paciente: " + cita.nombre + ". Especialidad: " + cita.esp + ". Profesional: " + cita.especialista + ". Fecha y hora: " + fecha + ". Centro de rehabilitación IESS Guaranda. Revisa los datos antes de confirmar.");
+      lectura.lang = "es-EC";
+      lectura.onend = () => setVozEstado("Lectura finalizada.");
+      lectura.onerror = () => setVozEstado("No se pudo reproducir la voz. Puedes consultar el resumen escrito.");
+      lecturaRef.current = lectura;
+      window.speechSynthesis.speak(lectura);
+      setVozEstado("Leyendo el resumen.");
+    } catch {
+      setVozEstado("No se pudo reproducir la voz. Puedes consultar el resumen escrito.");
+    }
+  };
   return (
     <section className="card confirmacion" aria-labelledby="confirmacion-titulo">
       <p className="eyebrow">Último paso</p>
@@ -64,6 +98,18 @@ function Confirmacion({ cita, esReprogramacion, onModificar, onConfirmar }) {
         <div><dt>Fecha y hora</dt><dd>{cita.fecha} · {cita.hora}</dd></div>
         <div><dt>Centro</dt><dd>IESS Centro de Rehabilitación Guaranda</dd></div>
       </dl>
+      <div className="acciones-confirmacion">
+        <button type="button" className="btn-secondary" onClick={escucharResumen}>Escuchar resumen</button>
+        <button type="button" className="btn-secondary" onClick={() => {
+          if (lecturaRef.current) {
+            lecturaRef.current.onend = null;
+            lecturaRef.current.onerror = null;
+          }
+          window.speechSynthesis?.cancel();
+          setVozEstado("Lectura detenida.");
+        }}>Detener lectura</button>
+      </div>
+      <p role="status">{vozEstado}</p>
       <p className="privacy-note">El código personal de cuatro dígitos se usa solo para validar este formulario y no se guardará.</p>
       <div className="acciones-confirmacion">
         <button type="button" className="btn-secondary" onClick={onModificar}>← Modificar</button>
