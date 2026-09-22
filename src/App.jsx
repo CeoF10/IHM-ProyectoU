@@ -3,6 +3,7 @@ import VistaRapidaForm from "./components/VistaRapidaForm";
 import GuiaPasoAPasoForm from "./components/GuiaPasoAPasoForm";
 import AccesibleForm from "./components/AccesibleForm";
 import InfoPanels from "./components/InfoPanels";
+import Home from "./components/Home";
 import { especialistas } from "./data/mock";
 import { borradorVacio, generarCodigo, quitarDatosSensibles } from "./utils/appointments";
 
@@ -247,14 +248,14 @@ export default function App() {
   const navegacionSecundaria = [["calendario", "Disponibilidad"], ["ejercicios", "Ejercicios"], ["recordatorios", "Recordatorios"], ["centros", "Centro de atención"], ["registro", "Registro"]];
   const textosSeccion = {
     inicio: ["Rehabilitación · Guaranda", "Tu próxima cita, más cerca.", "Encuentra atención, organiza tus citas y consulta las orientaciones para tu rehabilitación."],
-    cita: ["Atención en rehabilitación", "Organiza tu atención de forma simple y clara", "Consulta profesionales, encuentra un horario y prepara una cita en pocos pasos."],
-    historial: ["Seguimiento personal", "Tus citas, ordenadas en un solo lugar", "Consulta el estado, reprograma o cancela una cita de demostración."],
-    especialistas: ["Equipo de atención", "Encuentra el profesional indicado", "Conoce las especialidades y horarios simulados antes de elegir."],
-    centros: ["Información útil", "Todo lo necesario para llegar preparado", "Consulta ubicación, contacto y horario del centro de demostración."],
-    calendario: ["Planifica con tiempo", "Explora la disponibilidad de la semana", "Compara los cupos simulados de cada profesional por día."],
-    ejercicios: ["Acompañamiento", "Contenido claro para continuar en casa", "Revisa material de demostración con subtítulos y transcripción."],
-    recordatorios: ["Antes de tu atención", "Pequeños avisos que ayudan", "Ten a mano la información necesaria para tu próxima cita."],
-    registro: ["Demostración local", "Prueba un registro sencillo y transparente", "Los datos se validan en esta pantalla y no se envían ni se guardan."],
+    cita: ["Atención en rehabilitación", "Solicitar una cita", "Consulta profesionales, encuentra un horario y prepara una cita en pocos pasos."],
+    historial: ["Seguimiento personal", "Mis citas", "Consulta el estado, reprograma o cancela una cita de demostración."],
+    especialistas: ["Equipo de atención", "Profesionales de atención", "Conoce las especialidades y horarios simulados antes de elegir."],
+    centros: ["Información útil", "Centro de atención", "Consulta ubicación, contacto y horario del centro de demostración."],
+    calendario: ["Planifica con tiempo", "Disponibilidad de citas", "Compara los cupos simulados de cada profesional por día."],
+    ejercicios: ["Acompañamiento", "Ejercicios y orientación", "Revisa material de demostración con subtítulos y transcripción."],
+    recordatorios: ["Antes de tu atención", "Tus recordatorios", "Ten a mano la información necesaria para tu próxima cita."],
+    registro: ["Demostración local", "Registro de usuario", "Los datos se validan en esta pantalla y no se envían ni se guardan."],
   };
   const [heroKicker, heroTitle, heroDescription] = textosSeccion[seccion];
 
@@ -263,7 +264,7 @@ export default function App() {
       <a href="#main" className="skip">Saltar al contenido</a>
       <header className="top">
         <div className="header-inner">
-          <div className="brand"><span className="brand-mark" aria-hidden="true">R</span><span><strong>Rehab Guaranda</strong><small>Orientación y citas</small></span></div>
+          <div className="brand"><span className="brand-mark" aria-hidden="true">+</span><span><strong>Rehabilitación</strong><small>IESS · Guaranda</small></span></div>
           <button type="button" className="menu-toggle" aria-expanded={menuAbierto} aria-controls="nav-principal" onClick={() => setMenuAbierto(!menuAbierto)}>
             {menuAbierto ? "Cerrar" : "Menú"}
           </button>
@@ -281,40 +282,22 @@ export default function App() {
         </div>
       </header>
 
-      <div className="utility-shell"><Preferencias valor={preferencias} onChange={setPreferencias} /></div>
+      <div className="utility-shell"><span className="prototype-label">Prototipo académico · Datos simulados</span><Preferencias valor={preferencias} onChange={setPreferencias} /></div>
 
       <main id="main">
-        <section className={seccion === "inicio" ? "hero" : "hero hero-compact"}>
+        {seccion === "inicio" ? <Home titleRef={tituloRef} onNavigate={navegar} onStart={(esp) => {
+          setCitaPendiente(null);
+          setEditandoId(null);
+          setBorrador((actual) => esp && esp !== actual.esp ? { ...actual, esp, especialista: "", fecha: "", hora: "" } : actual);
+          navegar("cita");
+        }} /> : <section className="hero hero-compact">
           <div className="hero-copy">
             <p className="hero-kicker">{heroKicker}</p>
             <h1 ref={tituloRef} tabIndex={-1}>{heroTitle}</h1>
             <p className="hero-description">{heroDescription}</p>
-            {seccion === "inicio" && <div className="hero-actions"><button className="btn-primary" onClick={() => navegar("cita")}>Solicitar una cita ↗</button><button className="hero-secondary" onClick={() => navegar("historial")}>Consultar mis citas</button></div>}
-            <p className="demo-note"><span className="demo-icon" aria-hidden="true">i</span><span><strong>Prototipo académico.</strong> No crea citas reales ni envía información.</span></p>
           </div>
-          <div className="hero-preview" aria-hidden="true">
-            <span className="preview-label">Tu recorrido</span>
-            <ol>
-              <li><span>1</span><div><strong>Elige atención</strong><small>Especialidad y profesional</small></div></li>
-              <li><span>2</span><div><strong>Encuentra un horario</strong><small>Elige un día y una hora</small></div></li>
-              <li><span>3</span><div><strong>Revisa y confirma</strong><small>Sin guardar tu identificación</small></div></li>
-            </ol>
-          </div>
-        </section>
-        {ok && <p role="status" className="okmsg">{ok}</p>}
-        {seccion === "inicio" && <section aria-labelledby="servicios-title">
-          <div className="section-heading"><div><p className="eyebrow">A tu alcance</p><h2 id="servicios-title">¿Qué necesitas hacer hoy?</h2></div><p>Accede directamente al servicio que buscas.</p></div>
-          <div className="service-grid">{[
-            ["especialistas", "01", "Conocer profesionales", "Consulta especialidades y horarios de atención."],
-            ["calendario", "02", "Ver disponibilidad", "Encuentra un día con cupos para tu atención."],
-            ["ejercicios", "03", "Consultar ejercicios", "Explora videos, subtítulos y guías escritas."],
-            ["recordatorios", "04", "Revisar recordatorios", "Ten presentes tus próximas citas."],
-            ["centros", "05", "Ubicar el centro", "Consulta ubicación, contacto y horarios."],
-            ["registro", "06", "Registrarme", "Prueba el registro de usuario del prototipo."],
-          ].map(([destino, numero, titulo, descripcion]) => <button key={destino} className="service-card" onClick={() => navegar(destino)}><span className="service-number" aria-hidden="true">{numero}</span><strong>{titulo}</strong><span>{descripcion}</span><span className="service-arrow" aria-hidden="true">↗</span></button>)}</div>
-          <aside className="help-strip"><div><strong>Una experiencia a tu medida</strong><p>En Accesibilidad puedes ampliar el texto y los botones o aumentar el contraste. Al solicitar una cita también puedes elegir la guía paso a paso.</p></div><span aria-hidden="true">Aa</span></aside>
         </section>}
-
+        {ok && <p role="status" className="okmsg">{ok}</p>}
         {seccion === "cita" && (citaPendiente ? (
           <Confirmacion cita={citaPendiente} esReprogramacion={!!editandoId} onModificar={() => setCitaPendiente(null)} onConfirmar={guardarCita} />
         ) : (

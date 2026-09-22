@@ -77,13 +77,7 @@ function proximosDiasLaborables(cantidad = 5) {
 }
 
 export default function InfoPanels({ seccion, citas, onChangeStatus, onReschedule, onClearData }) {
-  if (seccion === "especialistas") return <section className="card" aria-labelledby="especialistas-titulo">
-    <h2 id="especialistas-titulo">Profesionales disponibles</h2>
-    <ul className="docs">{especialistas.map((item) => <li key={item.id} className="doc">
-      <span className="avatar" aria-hidden="true">{item.foto}</span>
-      <span><strong>{item.nombre}</strong><br />{item.especialidad}<br />{item.horario}</span>
-    </li>)}</ul>
-  </section>;
+  if (seccion === "especialistas") return <Especialistas />;
 
   if (seccion === "calendario") return <section className="card" aria-labelledby="calendario-titulo">
     <h2 id="calendario-titulo">Disponibilidad de los próximos días</h2>
@@ -160,4 +154,20 @@ export default function InfoPanels({ seccion, citas, onChangeStatus, onReschedul
   </section>;
 
   return null;
+}
+
+function Especialistas() {
+  const [consulta, setConsulta] = useState("");
+  const filtrados = especialistas.filter((item) => `${item.nombre} ${item.especialidad}`.toLocaleLowerCase("es").includes(consulta.trim().toLocaleLowerCase("es")));
+  return <section className="card" aria-labelledby="especialistas-titulo">
+    <h2 id="especialistas-titulo">Profesionales disponibles</h2>
+    <p className="muted">Busca por nombre o especialidad para encontrar a quién elegir en tu cita.</p>
+    <label htmlFor="buscar-profesional">Buscar profesional o especialidad</label>
+    <input id="buscar-profesional" type="search" value={consulta} onChange={(event) => setConsulta(event.target.value)} placeholder="Ej. fisioterapia" />
+    <p className="sr-only" role="status" aria-live="polite">{filtrados.length} profesionales encontrados.</p>
+    {filtrados.length ? <ul className="docs">{filtrados.map((item) => <li key={item.id} className="doc">
+      <span className="avatar" aria-hidden="true">{item.foto}</span>
+      <span><strong>{item.nombre}</strong><br />{item.especialidad}<br />{item.horario}</span>
+    </li>)}</ul> : <p role="status" className="alert info">No encontramos profesionales con ese nombre o especialidad. Prueba con otra palabra.</p>}
+  </section>;
 }
