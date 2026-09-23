@@ -98,23 +98,34 @@ npm run dev
 
 No se envían datos a un servidor. Las citas permanecen en `sessionStorage` y desaparecen al cerrar la pestaña; el identificador personal nunca se almacena.
 
-## Rediseño del portal de atención
+## Dirección visual para el portal
 
-La dirección es un portal de rehabilitación claro y cercano. El problema central guía cada cambio: conocer los servicios, solicitar una cita y consultar ejercicios. Se utiliza la skill `frontend-design` de Anthropic, instalada en las skills personales de Codex.
+Se aplicó la skill `frontend-design` al problema específico del proyecto: ayudar a pacientes de rehabilitación en Guaranda a entender la oferta y comenzar una solicitud de cita. La portada usa un diagrama original de movimiento de hombro como firma visual, no una ilustración de stock ni un banner promocional.
 
-### Plan y decisiones
+### Sistema visual
 
-1. Portada clara con título concreto y un selector de atención que permite comenzar la cita desde Inicio.
-2. Panel azul para solicitar atención; dorado reservado a su acción principal.
-3. Acceso independiente a Mis citas para personas que ya reservaron.
-4. Servicios agrupados por intención: organizar la atención y encontrar orientación.
-5. Iconos de calendario, profesionales, ubicación y ejercicios en lugar de numerar funciones sin orden secuencial.
-6. Encabezados internos breves, con más espacio para los formularios y menos espacio decorativo.
-7. Tipografía humanista sans-serif con Verdana/Trebuchet como fuentes locales, tamaños de lectura cómodos y líneas cortas.
-8. Tarjetas de profesionales e historial con información jerarquizada y acciones visibles.
-9. Tres modos de solicitud diferenciados por sus ayudas, conservando los datos al cambiar de formato.
-10. Foco visible, controles táctiles amplios, diseño adaptable y respeto a movimiento reducido.
-11. Mantener azul oscuro #0E3A65, azul #1B4F91 y dorado #F2B705; blanco y tonos neutros para superficies. Rojo únicamente para errores y acciones destructivas.
-12. Revisar escritorio y móvil, búsqueda y solicitud de citas. Las pruebas con participantes y lectores de pantalla siguen pendientes.
+- Azul petróleo `#0E3A65`: panel de cita, encabezados y navegación principal.
+- Azul IESS `#1B4F91`: enlaces, iconos e indicadores seleccionados.
+- Dorado `#F2B705`: acciones principales y trayectoria de movimiento de la ilustración.
+- Azul niebla `#EAF1F8`: información de apoyo y superficies seleccionadas.
+- Fondo `#F5F7FA` y tinta `#17223B`: lectura y estructura.
+- Titulares en Trebuchet MS; texto y formularios en Verdana, con fuentes locales de reserva. Controles y texto se mantienen grandes y legibles.
 
-La revisión de la propuesta eliminó el gran bloque degradado, las tarjetas numeradas y las etiquetas decorativas repetidas. El elemento principal será el selector de atención, porque permite comenzar la tarea que motivó el proyecto.
+### Distribución
+
+```text
+┌ Marca y navegación ──────────────────────────────────────────────┐
+│ Propósito y pasos       Movimiento de hombro       Solicita cita │
+├ Ya tienes una cita? ─────────────────────────────────────────────┤
+│ Organiza tu atención                 Orientación para ti          │
+│ Profesionales · Cupos · Centro       Ejercicios · Avisos · Registro│
+├ Ajustes de accesibilidad ────────────────────────────────────────┤
+```
+
+En móvil, la ilustración decorativa se oculta y la portada conserva primero el formulario de cita; el resto de los servicios pasa a una columna. Los formularios internos usan superficies claras, etiquetas visibles, selección azul y una llamada principal dorada. No usamos tarjetas idénticas para todos los servicios: los accesos aparecen como filas agrupadas para reducir ruido y apoyar la exploración.
+
+### Revisión frente al problema
+
+La primera propuesta seguía una plantilla habitual de hero, cuadrícula de tarjetas y fondo degradado; aunque contenía las funciones, no expresaba el tema de rehabilitación. La revisé para que el movimiento corporal sea el gesto visual propio del proyecto y para que el selector de especialidad sea el primer paso real de la reserva. Se excluyen contenido noticioso, campañas, métricas sin datos y elementos institucionales que no ayudan a agendar o encontrar orientación.
+
+Las pruebas de compilación, lint y utilidades están descritas en la entrega de esta iteración. La evaluación con pacientes y con lectores de pantalla sigue pendiente.

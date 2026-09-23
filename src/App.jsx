@@ -264,7 +264,7 @@ export default function App() {
       <a href="#main" className="skip">Saltar al contenido</a>
       <header className="top">
         <div className="header-inner">
-          <div className="brand"><span className="brand-mark" aria-hidden="true">+</span><span><strong>Rehabilitación</strong><small>IESS · Guaranda</small></span></div>
+          <div className="brand"><span className="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M8 26c4-10 10-14 16-11 4 2 7 7 8 14M11 16l5 2-1-5" fill="none" stroke="currentColor" strokeWidth="2.7" strokeLinecap="round" strokeLinejoin="round"/><circle cx="29" cy="12" r="3" fill="var(--gold)"/></svg></span><span><strong>Rehabilitación</strong><small>IESS · Guaranda</small></span></div>
           <button type="button" className="menu-toggle" aria-expanded={menuAbierto} aria-controls="nav-principal" onClick={() => setMenuAbierto(!menuAbierto)}>
             {menuAbierto ? "Cerrar" : "Menú"}
           </button>

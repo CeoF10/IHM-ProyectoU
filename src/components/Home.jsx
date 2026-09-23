@@ -13,6 +13,23 @@ export function ServiceIcon({ type }) {
   return <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">{paths[type] || paths.calendar}</svg>;
 }
 
+function MovementIllustration() {
+  return <figure className="movement-art">
+    <svg viewBox="0 0 260 270" role="img" aria-labelledby="movement-title">
+      <title id="movement-title">Ilustración de movilidad de hombro</title>
+      <circle cx="130" cy="135" r="112" fill="#EAF1F8" />
+      <path d="M50 157a92 92 0 0 1 151-75" fill="none" stroke="#F2B705" strokeWidth="8" strokeLinecap="round" />
+      <path d="m190 71 14 8-2-16" fill="none" stroke="#F2B705" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="119" cy="85" r="18" fill="#1B4F91" />
+      <path d="M114 106c-10 17-13 41-8 60l-26 38m30-38 38 12 13 32m-52-68-25-9-19 27m31-28 25-21 31-23m-63 90 44 2" fill="none" stroke="#0E3A65" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M178 70a65 65 0 0 1 32 50" fill="none" stroke="#1B4F91" strokeWidth="3" strokeDasharray="5 8" strokeLinecap="round" />
+      <circle cx="211" cy="125" r="5" fill="#F2B705" />
+      <path d="M65 223h132" stroke="#1B4F91" strokeWidth="3" strokeLinecap="round" opacity=".35" />
+    </svg>
+    <figcaption>Movimiento, a tu ritmo</figcaption>
+  </figure>;
+}
+
 const groups = [
   { title: "Organiza tu atención", description: "Encuentra lo necesario antes de tu visita.", items: [
     ["especialistas", "people", "Profesionales", "Conoce sus especialidades y horarios."],
@@ -32,11 +49,12 @@ export default function Home({ onNavigate, onStart, titleRef }) {
     <section className="home-intro" aria-labelledby="home-title">
       <div className="home-copy">
         <p className="location-label">Servicio de rehabilitación en Guaranda</p>
-        <h1 id="home-title" ref={titleRef} tabIndex={-1}>Tu rehabilitación,<br/>paso a paso.</h1>
-        <p className="home-description">Encuentra un profesional, organiza tu cita y consulta las orientaciones para tu atención.</p>
+        <h1 id="home-title" ref={titleRef} tabIndex={-1}>Organiza tu atención de rehabilitación.</h1>
+        <p className="home-description">Encuentra un profesional, elige un horario disponible y consulta las orientaciones para tu atención.</p>
         <div className="home-process" aria-label="Pasos para solicitar una cita"><span>Elige la atención</span><span aria-hidden="true">›</span><span>Busca un horario</span><span aria-hidden="true">›</span><span>Confirma</span></div>
         <p className="home-access-note">Puedes ampliar el texto o elegir una solicitud guiada en cualquier momento.</p>
       </div>
+      <MovementIllustration />
       <form className="booking-start" onSubmit={(event) => { event.preventDefault(); onStart(especialidad); }}>
         <span className="booking-symbol"><ServiceIcon type="calendar" /></span>
         <h2>Solicita tu cita</h2>
