@@ -9,9 +9,10 @@
 ```text
 Inicio
 ├── Solicitar cita
-│   ├── Vista rápida
-│   ├── Guía paso a paso
-│   └── Accesibilidad reforzada
+│   ├── 1. Datos de la persona
+│   ├── 2. Profesional
+│   ├── 3. Fecha y hora
+│   └── Revisar y confirmar
 ├── Especialistas
 ├── Calendario
 ├── Historial
@@ -24,15 +25,14 @@ Inicio
 ## Flujo principal de cita
 
 ```text
-Elegir modo de interacción
-→ completar los datos
+Completar datos
 → elegir profesional
 → seleccionar fecha y hora
 → revisar y confirmar
 → consultar la cita en Historial
 ```
 
-En la vista rápida el flujo aparece en una sola pantalla. En la guía paso a paso se divide en cuatro etapas y permite regresar desde la confirmación. En accesibilidad reforzada se presenta de manera lineal para conservar un orden de teclado predecible. Los modos están disponibles para cualquier persona y no exigen declarar edad o discapacidad.
+El recorrido mantiene una sola tarea por paso, permite regresar sin perder los datos y deja revisar la solicitud antes de confirmarla. La navegación por teclado, las etiquetas comprensibles y los mensajes de error forman parte del mismo flujo. Las preferencias de tamaño de texto, contraste y botones se encuentran en el acceso general de Accesibilidad.
 
 ## Persistencia simulada
 

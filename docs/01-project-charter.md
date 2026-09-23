@@ -14,7 +14,7 @@ Los usuarios tienen dificultades para conocer servicios disponibles, solicitar u
 ## 4. Alcance
 **Incluye:**
 - Las 8 funciones simuladas con datos mock y almacenamiento temporal de sesión, sin BD ni API real.
-- Foco total en pantalla Solicitud de Cita en 3 variantes.
+- Foco total en una solicitud de cita guiada, accesible y de un solo recorrido.
 - Documentación de análisis IHM.
 
 **No incluye:**
@@ -47,16 +47,12 @@ Los usuarios tienen dificultades para conocer servicios disponibles, solicitar u
 7. Lector pantalla: labels, aria-label, roles, alt en imágenes, h1 único.
 8. Multimedia: iconos + texto, video ejercicios subtitulado, audio opcional.
 
-## 8. Los 3 modos de interacción
-Los perfiles de investigación orientan el diseño, pero la interfaz no obliga a nadie a declarar su edad ni una discapacidad. Cada persona elige el formato que le resulte más cómodo.
-
-- **V1 Vista rápida:** compacta, moderna y con calendario visible.
-- **V2 Guía paso a paso:** letra grande, alto contraste, pocos elementos y botones grandes.
-- **V3 Accesibilidad reforzada:** diseñada para teclado y lector de pantalla, foco muy visible, lectura por voz y sin dependencia de hover o drag. La compatibilidad con NVDA/JAWS debe comprobarse manualmente.
+## 8. Decisión sobre el flujo de interacción
+Los perfiles de investigación orientan el diseño, pero la interfaz no obliga a nadie a declarar su edad ni una discapacidad. La solicitud tiene un único recorrido de tres pasos: datos, profesional y fecha/hora; después se presenta un resumen para revisar antes de confirmar. Esto evita que la persona tenga que entender y elegir entre varios formularios antes de empezar. El tamaño del texto, contraste y botones se ajustan desde Accesibilidad y las etiquetas, el orden de teclado y los mensajes claros están integrados en el flujo.
 
 ## 9. Backlog inicial (Scrum)
 - Sprint 0: Charter + mapa navegación [HECHO]
-- Sprint 1: Mapa + prototipo React de 3 variantes de solicitud [HECHO]
+- Sprint 1: Mapa + prototipo React de solicitud accesible en 3 pasos [HECHO]
 - Sprint 2: Resto de pantallas mock [HECHO] + evaluación heurística [PENDIENTE]
 - Sprint 3: Informe final + presentación [PENDIENTE]
 

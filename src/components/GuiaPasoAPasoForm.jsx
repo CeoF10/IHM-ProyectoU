@@ -47,12 +47,11 @@ export default function GuiaPasoAPasoForm({ form, setForm, citas, editandoId, on
 
   return (
     <section className="card guiada" aria-label="Solicitud de cita con guía paso a paso">
-      <div className="form-header"><div><p className="eyebrow">Proceso acompañado</p><h2 ref={tituloRef} tabIndex={-1}>Solicitud guiada</h2><p className="muted grande">Un paso a la vez. Puedes regresar sin perder tus datos.</p></div><span className="privacy-badge">Paso {paso} de 4</span></div>
-      <ol className="pasos" aria-label={`Paso ${paso} de 4`}>
+      <div className="form-header"><div><p className="eyebrow">Nueva cita</p><h2 ref={tituloRef} tabIndex={-1}>Solicitud de cita</h2><p className="muted grande">Un paso a la vez. Puedes regresar sin perder tus datos.</p></div><span className="privacy-badge">Paso {paso} de 3</span></div>
+      <ol className="pasos" aria-label={`Paso ${paso} de 3`}>
         <li aria-current={paso === 1 ? "step" : undefined} className={paso >= 1 ? "on" : ""}>1. Datos</li>
         <li aria-current={paso === 2 ? "step" : undefined} className={paso >= 2 ? "on" : ""}>2. Profesional</li>
         <li aria-current={paso === 3 ? "step" : undefined} className={paso >= 3 ? "on" : ""}>3. Fecha</li>
-        <li>4. Confirmación</li>
       </ol>
 
       {error && <p ref={errorRef} tabIndex={-1} role="alert" className="err grande">{error}</p>}

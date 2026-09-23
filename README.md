@@ -34,7 +34,7 @@ Fase 0: Charter -> Fase 1: Investigación -> Fase 2: Diseño -> Fase 3: Prototip
 - Diagrama de casos de uso en `diagramas/` y entrega de la Tarea 4 en `entregas-docente/tarea-04/`.
 - Charter, mapa de navegación y análisis IHM documentados.
 - Prototipo de las 8 funciones implementado con datos simulados.
-- Solicitud de cita disponible como vista rápida, guía paso a paso y accesibilidad reforzada, sin pedir que la persona se clasifique.
+- Solicitud de cita en un único recorrido de tres pasos, con opción de volver, resumen previo y controles generales de accesibilidad.
 - Identidad visual adaptada a la paleta institucional azul y dorado del IESS; búsqueda local de profesionales por nombre o especialidad.
 - Decisiones de adopción y descarte de los referentes IESS, Hospital Vozandes y Hospital Metropolitano documentadas en `docs/03-analisis-ihm.md`.
 - Evaluación manual con teclado y lector de pantalla pendiente de registrar.
@@ -73,7 +73,7 @@ Diseñar la pantalla de solicitud de cita para personas jóvenes, adultos mayore
 - Compatibilidad con lectores de pantalla.
 - Herramientas multimedia.
 
-Los perfiles orientan las decisiones de accesibilidad; el prototipo deja que cada persona elija el formato de interacción sin pedirle que se clasifique por edad o discapacidad.
+Los perfiles orientan las decisiones de accesibilidad; el prototipo no le pide al paciente que se clasifique ni que elija entre distintos formularios. Toda persona sigue un recorrido de tres pasos y puede ajustar texto, contraste o tamaño de botones desde Accesibilidad.
 
 **Nota sobre la captura:** el enunciado lista ocho criterios, pero también parece mencionar una calificación para “5 ítems” de 0,25. Conviene confirmar ese detalle con la docente porque el número no coincide con la lista.
 

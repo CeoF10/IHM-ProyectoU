@@ -1,22 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import VistaRapidaForm from "./components/VistaRapidaForm";
 import GuiaPasoAPasoForm from "./components/GuiaPasoAPasoForm";
-import AccesibleForm from "./components/AccesibleForm";
 import InfoPanels from "./components/InfoPanels";
 import Home from "./components/Home";
 import { especialistas } from "./data/mock";
 import { borradorVacio, crearCitasDemo, generarCodigo, quitarDatosSensibles } from "./utils/appointments";
 
 const preferenciasIniciales = { textoGrande: false, altoContraste: false, botonesGrandes: false };
-
-function Icono({ tipo }) {
-  const trazos = {
-    rapido: <><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" /></>,
-    pasos: <><circle cx="6" cy="6" r="2" /><circle cx="18" cy="12" r="2" /><circle cx="6" cy="18" r="2" /><path d="M8 6h5a3 3 0 0 1 3 3v1M16 14v1a3 3 0 0 1-3 3H8" /></>,
-    apoyo: <><circle cx="12" cy="4" r="2" /><path d="M5 8h14M12 6v6m0 0-4 9m4-9 4 9" /></>,
-  };
-  return <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">{trazos[tipo]}</svg>;
-}
 
 function Preferencias({ valor, onChange }) {
   const [mensajeVoz, setMensajeVoz] = useState("");
@@ -121,7 +110,6 @@ function Confirmacion({ cita, esReprogramacion, onModificar, onConfirmar }) {
 }
 
 export default function App() {
-  const [modo, setModo] = useState("rapida");
   const [seccion, setSeccion] = useState("inicio");
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [borrador, setBorrador] = useState(borradorVacio);
@@ -225,7 +213,6 @@ export default function App() {
     });
     setEditandoId(cita.id);
     setCitaPendiente(null);
-    setModo("guiada");
     navegar("cita");
   };
 
@@ -317,17 +304,12 @@ export default function App() {
         ) : (
           <>
             {editandoId && <p className="alert info" role="status">Estás reprogramando una cita. Revisa la nueva fecha y hora antes de confirmar.</p>}
-            <section className="mode-section" aria-labelledby="mode-title">
-              <div className="section-heading"><div><p className="eyebrow">Personaliza el proceso</p><h2 id="mode-title">¿Cómo quieres completar la solicitud?</h2></div><p>Puedes cambiar de formato sin perder tus datos.</p></div>
-              <div className="modos" role="group" aria-label="Formato de solicitud">
-                <button onClick={() => setModo("rapida")} className={modo === "rapida" ? "mode-card active" : "mode-card"} aria-pressed={modo === "rapida"}><span className="mode-index"><Icono tipo="rapido" /></span><span><strong>Vista rápida</strong><small>Todo en una pantalla</small></span><span className="mode-check" aria-hidden="true">✓</span></button>
-                <button onClick={() => setModo("guiada")} className={modo === "guiada" ? "mode-card active" : "mode-card"} aria-pressed={modo === "guiada"}><span className="mode-index"><Icono tipo="pasos" /></span><span><strong>Paso a paso</strong><small>Una decisión a la vez</small></span><span className="mode-check" aria-hidden="true">✓</span></button>
-                <button onClick={() => setModo("reforzada")} className={modo === "reforzada" ? "mode-card active" : "mode-card"} aria-pressed={modo === "reforzada"}><span className="mode-index"><Icono tipo="apoyo" /></span><span><strong>Con más apoyos</strong><small>Lineal, grande y con voz</small></span><span className="mode-check" aria-hidden="true">✓</span></button>
-              </div>
+            <section className="booking-flow-intro" aria-labelledby="booking-flow-title">
+              <p className="eyebrow">Solicitud de cita</p>
+              <h2 id="booking-flow-title">Completa estos pasos</h2>
+              <p>Te guiaremos desde tus datos hasta la elección de un horario. Puedes volver para corregir cualquier respuesta.</p>
             </section>
-            {modo === "rapida" && <VistaRapidaForm form={borrador} setForm={setBorrador} citas={citas} editandoId={editandoId} onConfirm={prepararConfirmacion} />}
-            {modo === "guiada" && <GuiaPasoAPasoForm form={borrador} setForm={setBorrador} citas={citas} editandoId={editandoId} onConfirm={prepararConfirmacion} />}
-            {modo === "reforzada" && <AccesibleForm form={borrador} setForm={setBorrador} citas={citas} editandoId={editandoId} onConfirm={prepararConfirmacion} />}
+            <GuiaPasoAPasoForm form={borrador} setForm={setBorrador} citas={citas} editandoId={editandoId} onConfirm={prepararConfirmacion} />
           </>
         ))}
         {seccion !== "cita" && seccion !== "inicio" && <InfoPanels seccion={seccion} citas={citas} onChangeStatus={actualizarEstado} onReschedule={reprogramar} onClearData={borrarDatos} onLoadDemo={cargarCitasDemo} />}

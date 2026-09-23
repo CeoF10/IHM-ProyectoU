@@ -1,13 +1,12 @@
 # 03 - Análisis IHM (para exponer ante la docente)
 
-## Reto: pantalla Solicitud de Cita en 3 modos de interacción
+## Reto: una solicitud simple, guiada y accesible
 
-Los modos responden a diferentes necesidades de uso sin etiquetar a la persona por edad o discapacidad.
+Se descartó pedirle a la persona que elija entre “Vista rápida”, “Paso a paso” y “Accesibilidad reforzada”. Esa decisión añadía una pantalla y obligaba a entender diferencias entre formatos antes de solicitar una cita. El prototipo ahora presenta un único recorrido de tres pasos, con una tarea por pantalla, opción de volver y resumen antes de confirmar. La accesibilidad está integrada y sus preferencias generales se pueden ajustar cuando haga falta.
 
 ### 1. Tamaño de botones
-- Vista rápida: horarios y navegación con altura mínima de 44px.
-- Guía paso a paso: acciones y horarios con altura mínima de 56px.
-- Accesibilidad reforzada: campos de texto y selector de 56px; radios con etiqueta pulsable.
+- El recorrido usa acciones amplias y horarios seleccionables, con áreas de interacción cómodas en todos los pasos.
+- Tamaño de botones ajustable desde Accesibilidad sin cambiar de formulario.
 
 ### 2. Contraste e identidad visual
 - Paleta inspirada en los azules y el acento dorado observados en el portal del IESS y descritos en el análisis cromático de la Tarea 3: azul oscuro #0E3A65, azul medio #1B4F91 y dorado #F2B705. Es una adaptación para el prototipo, no una reproducción completa del manual de marca. El dorado se reserva para resaltar detalles y no para texto pequeño sobre blanco.
@@ -17,18 +16,17 @@ Los modos responden a diferentes necesidades de uso sin etiquetar a la persona p
 
 ### 3. Tipografía
 - Base system-ui sans-serif 16px.
-- Guía paso a paso 20px, labels bold.
+- La tipografía base mantiene legibilidad y puede ampliarse desde Accesibilidad.
 - Sin serifas, interlineado 1.5.
 
 ### 4. Cantidad de información
-- Vista rápida: todo en 1 pantalla compacta grid 2 col.
-- Guía paso a paso: wizard 4 pasos, 1 tarea por vez.
-- Accesibilidad reforzada: lineal, fieldset/legend, sin columnas.
+- Una tarea por pantalla: datos, profesional y fecha/hora; confirmación en un resumen separado.
+- Permite volver sin perder la información ya ingresada.
 
 ### 5. Mensajes de error
 - `role=alert`, ejemplo de corrección: "Escribe únicamente los últimos 4 números. Ejemplo: 4567."
-- Guía paso a paso: lenguaje simple + icono ⚠️.
-- Accesible: `aria-invalid` + `aria-describedby`.
+- Mensajes directos con ejemplos de corrección; foco en el campo que necesita atención.
+- Errores vinculados a sus campos mediante `aria-invalid` y `aria-describedby`.
 
 ### 6. Navegación teclado
 - Todo con Tab / Shift+Tab / Enter.
@@ -42,20 +40,19 @@ Los modos responden a diferentes necesidades de uso sin etiquetar a la persona p
 - Alt / aria-label en avatar, video, grupos horas.
 
 ### 8. Multimedia
-- Guía paso a paso: ayuda visual y textual para llegar al centro + teléfono.
-- Accesible: voz + texto.
+- Ejercicios: video MP4 reproducible con subtítulos WebVTT, póster y transcripción escrita.
 - Ejercicios: video MP4 reproducible con subtítulos WebVTT, póster y transcripción escrita.
 
 ## Cómo probarlo
 1. `cd frontend && npm run dev`
-2. Ir a Solicitar cita y cambiar entre Vista rápida, Guía paso a paso y Accesibilidad reforzada.
+2. Ir a Solicitar cita, completar los tres pasos, volver para corregir y revisar el resumen antes de confirmar.
 3. Probar solo teclado: Tab hasta confirmar.
 4. Probar lector: NVDA/JAWS + Tab y registrar cuáles errores anuncia realmente.
 5. Mostrar Historial: guarda datos sanitizados únicamente durante la sesión del navegador (sin backend).
 6. Activar la lectura mediante el botón o la tecla de acceso `L` (el modificador depende del navegador y sistema operativo).
 
 ## Frase para defender
-> "Los perfiles orientaron la investigación, pero no etiquetamos al usuario: cualquier persona puede elegir el modo de interacción que le resulte más cómodo."
+> "Los perfiles orientaron la accesibilidad, pero no le pedimos al paciente que se clasifique ni que elija un formulario. Todas las personas siguen el mismo recorrido claro, con ajustes disponibles cuando los necesitan."
 
 ## Decisiones frente a las páginas analizadas
 

@@ -84,6 +84,6 @@ export default function Home({ onNavigate, onStart, titleRef, onLoadDemo, hasDem
         <span className="service-icon"><ServiceIcon type={icon}/></span><span><strong>{title}</strong><small>{detail}</small></span><span className="service-chevron" aria-hidden="true">›</span>
       </button>)}</div>
     </section>)}</div>
-    <aside className="home-help"><span aria-hidden="true">Aa</span><div><h2>Elige la forma más cómoda para ti</h2><p>Solicitud rápida, guía paso a paso o formato con más apoyos. Todos permiten completar la misma cita.</p></div><button className="btn-link" onClick={() => onNavigate("cita")}>Conocer los formatos</button></aside>
+    <aside className="home-help"><span aria-hidden="true">Aa</span><div><h2>Una solicitud clara y accesible</h2><p>El formulario te guía en tres pasos, permite volver para corregir y funciona con teclado. Ajusta el tamaño del texto, el contraste y los botones desde Accesibilidad.</p></div></aside>
   </div>;
 }
