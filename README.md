@@ -98,6 +98,19 @@ npm run dev
 
 No se envían datos a un servidor. Las citas permanecen en `sessionStorage` y desaparecen al cerrar la pestaña; el identificador personal nunca se almacena.
 
+## Usar los datos simulados
+
+El proyecto funciona como prototipo frontend y no necesita backend. Desde Inicio o desde **Mis citas**, pulsa **Cargar citas de ejemplo** para agregar dos citas futuras con el nombre genérico “Paciente de demostración”. Las citas llevan los códigos `DEMO-001` y `DEMO-002` y se marcan como ficticias.
+
+Con esos ejemplos puedes mostrar:
+
+- El historial y los estados de las citas.
+- Los recordatorios de próximas citas.
+- La reprogramación y cancelación; los cambios solo afectan los datos locales de la sesión.
+- La disponibilidad, que se actualiza al reservar o cancelar horarios.
+
+También puedes crear una cita manualmente desde **Solicitar cita** con cualquier nombre de prueba. El formulario no requiere una cédula real: el código de cuatro dígitos se valida solo en el navegador y nunca se guarda. Usa nombres inventados; al cerrar la pestaña se borran las citas de la sesión. Las especialidades, profesionales, horarios y datos del centro son información de ejemplo, no disponibilidad oficial del IESS.
+
 ## Dirección visual para el portal
 
 Se aplicó la skill `frontend-design` al problema específico del proyecto: ayudar a pacientes de rehabilitación en Guaranda a entender la oferta y comenzar una solicitud de cita. La portada usa un diagrama original de movimiento de hombro como firma visual, no una ilustración de stock ni un banner promocional.

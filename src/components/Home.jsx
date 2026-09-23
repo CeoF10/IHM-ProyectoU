@@ -43,7 +43,7 @@ const groups = [
   ] },
 ];
 
-export default function Home({ onNavigate, onStart, titleRef }) {
+export default function Home({ onNavigate, onStart, titleRef, onLoadDemo, hasDemo }) {
   const [especialidad, setEspecialidad] = useState("");
   return <div className="home">
     <section className="home-intro" aria-labelledby="home-title">
@@ -73,6 +73,11 @@ export default function Home({ onNavigate, onStart, titleRef }) {
       <div><h2 id="returning-title">¿Ya tienes una cita?</h2><p>Consulta la fecha, reprograma o cancela tu solicitud.</p></div>
       <button className="btn-secondary" onClick={() => onNavigate("historial")}>Ver mis citas</button>
     </section>
+    <aside className="demo-data-prompt" aria-labelledby="demo-data-title">
+      <div><p className="eyebrow">Prototipo académico · sin backend</p><h2 id="demo-data-title">Explora el recorrido con citas ficticias</h2>
+        <p>Agrega dos citas de ejemplo para revisar el historial, los recordatorios, la reprogramación y la cancelación. No necesitas ingresar datos personales.</p></div>
+      <button type="button" className="btn-primary" onClick={onLoadDemo}>{hasDemo ? "Ver citas de ejemplo" : "Cargar citas de ejemplo"}</button>
+    </aside>
     <div className="service-groups">{groups.map(group => <section key={group.title} className="service-group">
       <h2>{group.title}</h2><p>{group.description}</p>
       <div className="service-links">{group.items.map(([target, icon, title, detail]) => <button className="service-link" key={target} onClick={() => onNavigate(target)}>

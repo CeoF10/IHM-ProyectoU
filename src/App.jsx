@@ -5,7 +5,7 @@ import AccesibleForm from "./components/AccesibleForm";
 import InfoPanels from "./components/InfoPanels";
 import Home from "./components/Home";
 import { especialistas } from "./data/mock";
-import { borradorVacio, generarCodigo, quitarDatosSensibles } from "./utils/appointments";
+import { borradorVacio, crearCitasDemo, generarCodigo, quitarDatosSensibles } from "./utils/appointments";
 
 const preferenciasIniciales = { textoGrande: false, altoContraste: false, botonesGrandes: false };
 
@@ -237,6 +237,20 @@ export default function App() {
     setOk("Los datos locales de demostración fueron eliminados.");
   };
 
+  const cargarCitasDemo = () => {
+    const demos = crearCitasDemo();
+    const existentes = new Set(citas.map((cita) => cita.codigo));
+    const nuevas = demos.filter((cita) => !existentes.has(cita.codigo));
+    if (nuevas.length === 0) {
+      navegar("historial");
+      setOk("Las citas ficticias ya están cargadas. Puedes probar el historial y los recordatorios.");
+      return;
+    }
+    setCitas((actuales) => [...actuales, ...nuevas]);
+    navegar("historial");
+    setOk("Se añadieron dos citas ficticias. Úsalas para probar el historial y los recordatorios.");
+  };
+
   const clases = [
     "app",
     preferencias.textoGrande ? "pref-texto-grande" : "",
@@ -285,7 +299,7 @@ export default function App() {
       <div className="utility-shell"><span className="prototype-label">Prototipo académico · Datos simulados</span><Preferencias valor={preferencias} onChange={setPreferencias} /></div>
 
       <main id="main">
-        {seccion === "inicio" ? <Home titleRef={tituloRef} onNavigate={navegar} onStart={(esp) => {
+        {seccion === "inicio" ? <Home titleRef={tituloRef} onNavigate={navegar} onLoadDemo={cargarCitasDemo} hasDemo={citas.some((cita) => cita.esDemo)} onStart={(esp) => {
           setCitaPendiente(null);
           setEditandoId(null);
           setBorrador((actual) => esp && esp !== actual.esp ? { ...actual, esp, especialista: "", fecha: "", hora: "" } : actual);
@@ -316,7 +330,7 @@ export default function App() {
             {modo === "reforzada" && <AccesibleForm form={borrador} setForm={setBorrador} citas={citas} editandoId={editandoId} onConfirm={prepararConfirmacion} />}
           </>
         ))}
-        {seccion !== "cita" && seccion !== "inicio" && <InfoPanels seccion={seccion} citas={citas} onChangeStatus={actualizarEstado} onReschedule={reprogramar} onClearData={borrarDatos} />}
+        {seccion !== "cita" && seccion !== "inicio" && <InfoPanels seccion={seccion} citas={citas} onChangeStatus={actualizarEstado} onReschedule={reprogramar} onClearData={borrarDatos} onLoadDemo={cargarCitasDemo} />}
       </main>
       <footer><strong>Rehab Guaranda</strong><span>Proyecto académico de Interacción Hombre–Máquina · No es un sitio oficial</span></footer>
     </div>

@@ -301,6 +301,14 @@ h1 { letter-spacing:-.025em; line-height:1.12; }
 .returning-patient h2 { font-size:21px; margin:0 0 5px; }
 .returning-patient p { margin:0; color:var(--muted); font-size:14px; }
 .returning-patient button { margin-left:auto; flex-shrink:0; }
+.demo-data-prompt { display:flex; align-items:center; justify-content:space-between; gap:26px; margin-top:24px; padding:23px 26px; border:1px solid var(--line); border-left:4px solid var(--gold); background:#fff; }
+.demo-data-prompt h2 { margin:2px 0 7px; color:var(--primary-dark); font-size:20px; }
+.demo-data-prompt p:not(.eyebrow) { max-width:68ch; margin:0; color:var(--muted); font-size:14px; line-height:1.6; }
+.demo-data-prompt .eyebrow { margin:0; color:var(--primary); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; }
+.demo-data-prompt button { flex-shrink:0; }
+.empty-appointments { padding:18px 0 8px; }
+.empty-appointments .btn-primary { margin-top:8px; }
+.demo-record-label { display:table; margin:8px 0 !important; padding:4px 8px; border-radius:4px; background:var(--blue-soft); color:var(--primary-dark); font-size:12px; font-weight:700; }
 .service-groups { display:grid; grid-template-columns:1fr 1fr; gap:64px; margin:48px 0; }
 .service-group h2 { margin:0 0 8px; font-size:25px; }
 .service-group > p { font-size:14px; color:var(--muted); margin:0 0 18px; }
@@ -337,6 +345,8 @@ h1 { letter-spacing:-.025em; line-height:1.12; }
  .booking-start { padding:24px; }
  .returning-patient { padding:20px; flex-wrap:wrap; gap:14px; }
  .returning-patient button { margin-left:0; width:100%; }
+ .demo-data-prompt { align-items:stretch; flex-direction:column; gap:15px; padding:20px; }
+ .demo-data-prompt button { width:100%; }
  .service-groups { grid-template-columns:1fr; gap:32px; margin:32px 0; }
  .prototype-label { max-width:160px; font-size:11px; }
  .home-help { gap:14px; }

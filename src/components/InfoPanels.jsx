@@ -76,7 +76,7 @@ function proximosDiasLaborables(cantidad = 5) {
   return dias;
 }
 
-export default function InfoPanels({ seccion, citas, onChangeStatus, onReschedule, onClearData }) {
+export default function InfoPanels({ seccion, citas, onChangeStatus, onReschedule, onClearData, onLoadDemo }) {
   if (seccion === "especialistas") return <Especialistas />;
 
   if (seccion === "calendario") return <section className="card" aria-labelledby="calendario-titulo">
@@ -103,9 +103,9 @@ export default function InfoPanels({ seccion, citas, onChangeStatus, onReschedul
   if (seccion === "historial") return <section className="card" aria-labelledby="historial-titulo">
     <h2 id="historial-titulo">Mis citas de demostración</h2>
     <p className="privacy-note">Solo permanecen durante esta sesión del navegador. Nunca se conserva el número de cédula y los datos desaparecen al cerrar la pestaña.</p>
-    {citas.length === 0 ? <p className="muted">Aún no hay citas. Puedes crear una desde “Solicitar cita”.</p> : <div className="appointment-list">
+    {citas.length === 0 ? <div className="empty-appointments"><p className="muted">Aún no hay citas. Crea una desde “Solicitar cita” o carga ejemplos ficticios para recorrer las funciones de la demostración.</p><button type="button" className="btn-primary" onClick={onLoadDemo}>Cargar citas de ejemplo</button></div> : <div className="appointment-list">
       {citas.map((cita) => <article className="appointment-card" key={cita.id}>
-        <div><p className="eyebrow">Código {cita.codigo}</p><h3>{cita.esp}</h3><p>{cita.especialista}</p></div>
+        <div><p className="eyebrow">Código {cita.codigo}</p>{cita.esDemo && <p className="demo-record-label">Dato ficticio para la demostración</p>}<h3>{cita.esp}</h3><p>{cita.especialista}</p></div>
         <dl><div><dt>Paciente</dt><dd>{cita.nombre}</dd></div><div><dt>Fecha</dt><dd>{cita.fecha} · {cita.hora}</dd></div><div><dt>Estado</dt><dd><span className={`status status-${(cita.estado || "Pendiente").toLowerCase()}`}>{cita.estado || "Pendiente"}</span></dd></div></dl>
         <div className="appointment-actions">
           <button type="button" className="btn-secondary" onClick={() => onReschedule(cita)} disabled={cita.estado !== "Pendiente"}>Reprogramar</button>
