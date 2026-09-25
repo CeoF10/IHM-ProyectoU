@@ -64,7 +64,7 @@ Son necesidades de diseño, no categorías que la persona deba declarar. Cualqui
 - El número completo de cédula se pide en el formulario porque es un dato habitual de identificación, pero se elimina antes de guardar la cita de esta sesión. El formulario valida formato de diez dígitos; no consulta registros oficiales ni verifica a una persona real.
 
 ## Cómo probarlo
-1. `cd frontend && npm run dev`
+1. Desde la raíz de este repositorio, `npm ci` y `npm run dev`.
 2. Ir a Solicitar cita, completar los tres pasos, volver para corregir y revisar el resumen antes de confirmar.
 3. Probar solo teclado: Tab hasta confirmar.
 4. Probar lector: NVDA/JAWS + Tab y registrar cuáles errores anuncia realmente.

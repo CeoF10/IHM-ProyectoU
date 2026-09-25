@@ -4,6 +4,8 @@ Aplicación React y Vite para explorar la atención de rehabilitación en Guaran
 
 **Sitio publicado:** [ver el prototipo en GitHub Pages](https://ceof10.github.io/IHM-ProyectoU/).
 
+**Entrega para la docente:** [documentos originales, diagrama actualizado y guía de exposición](ENTREGA.md).
+
 La cabecera usa el [logotipo publicado por el IESS](https://www.iess.gob.ec/wp-content/themes/s5_business_line/images/s5_logo.png) y el azul `#004394` de su [portal oficial](https://www.iess.gob.ec/). La identidad se usa como referencia académica; el contenido, los profesionales y los horarios de esta aplicación son simulados.
 
 La solicitud de cita usa **un solo recorrido de tres pasos** para todas las personas: datos, profesional y fecha/hora. Después muestra un resumen antes de confirmar. Quien necesite ayudas puede ampliar el texto, aumentar los controles, activar alto contraste o usar la lectura por voz. El diseño se orienta a personas jóvenes, adultos mayores y personas con discapacidad visual o motriz sin pedirles que se clasifiquen.
@@ -51,7 +53,8 @@ Desde «Mis citas» → «Datos y privacidad» se pueden cargar dos citas fictic
 - `public/centro/`: fotografía institucional del Hospital de Guaranda.
 - `public/inicio/`: fotografía ilustrativa generada para la portada; no representa un centro ni personal real del IESS.
 - `docs/`: charter, mapa de navegación, análisis IHM y protocolo de evaluación.
-- `diagramas/` y `entregas-docente/`: material de las entregas académicas.
+- `diagramas/`: caso de uso editable de la versión actual.
+- `entregas-docente/`: PDF originales de las tareas 3, 4 y 5, más la presentación complementaria.
 
 La [evaluación con participantes y lector de pantalla](docs/04-protocolo-evaluacion.md) sigue pendiente. Las pruebas técnicas no sustituyen esa evaluación.
 
