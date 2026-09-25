@@ -124,20 +124,8 @@ export default function InfoPanels({ seccion, citas, onChangeStatus, onReschedul
     </div>
   </section>;
 
-  if (seccion === "ejercicios") return <section className="card" aria-labelledby="ejercicios-titulo">
-    <h2 id="ejercicios-titulo">Ejercicios de demostración</h2>
-    <p className="alert info"><strong>Importante:</strong> este contenido no sustituye las indicaciones de un profesional de salud.</p>
-    <article className="eje multimedia-card">
-      <div><p className="eyebrow">Video con subtítulos y transcripción</p><h3>Movilidad suave de hombro</h3><p>Demostración visual de tres pasos básicos.</p></div>
-      <video controls preload="metadata" poster="/ejercicios/movilidad-hombro.svg">
-        <source src="/ejercicios/movilidad-hombro.mp4" type="video/mp4" />
-        <track kind="captions" src="/ejercicios/movilidad-hombro.vtt" srcLang="es" label="Español" default />
-        Su navegador no puede reproducir el video. Consulte la transcripción disponible debajo.
-      </video>
-      <details><summary>Leer transcripción del video</summary><ol><li>Siéntate con la espalda apoyada.</li><li>Eleva lentamente el brazo hasta donde resulte cómodo.</li><li>Baja el brazo despacio. Detente si sientes dolor.</li></ol></details>
-    </article>
-    <div className="exercise-grid">{ejercicios.slice(1).map((item) => <article key={item.id} className="eje"><h3>{item.titulo}</h3><p><strong>Nivel:</strong> {item.nivel}</p><p>{item.desc}</p></article>)}</div>
-  </section>;
+  if (seccion === "ejercicios") return <EjerciciosSection />;
+
 
   if (seccion === "recordatorios") return <Recordatorios citas={citas} />;
 
@@ -171,3 +159,166 @@ function Especialistas() {
     </li>)}</ul> : <p role="status" className="alert info">No encontramos profesionales con ese nombre o especialidad. Prueba con otra palabra.</p>}
   </section>;
 }
+
+function EjerciciosSection() {
+  const [ejercicioActivoId, setEjercicioActivoId] = useState(1);
+  const [leyendoVoz, setLeyendoVoz] = useState(false);
+
+  const activo = ejercicios.find((e) => e.id === ejercicioActivoId) || ejercicios[0];
+
+  const hablarTranscripcion = () => {
+    if (!("speechSynthesis" in window)) return;
+    if (leyendoVoz) {
+      window.speechSynthesis.cancel();
+      setLeyendoVoz(false);
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const texto = `${activo.titulo}. Ejercicio del canal ${activo.canal}, guiado por ${activo.especialista}. ${activo.transcripcion}`;
+    const utterance = new SpeechSynthesisUtterance(texto);
+    utterance.lang = "es-EC";
+    utterance.rate = 0.95;
+    utterance.onend = () => setLeyendoVoz(false);
+    utterance.onerror = () => setLeyendoVoz(false);
+    setLeyendoVoz(true);
+    window.speechSynthesis.speak(utterance);
+  };
+
+  useEffect(() => {
+    return () => {
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    };
+  }, [ejercicioActivoId]);
+
+  return (
+    <section className="card" aria-labelledby="ejercicios-titulo">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px" }}>
+        <div>
+          <h2 id="ejercicios-titulo">Ejercicios de rehabilitación guiados</h2>
+          <p className="muted" style={{ margin: "4px 0 0" }}>
+            Videos explicativos con audio, subtítulos sincronizados y transcripción accesible. Fuente: <strong>FisioOnline</strong>.
+          </p>
+        </div>
+        <span className="canal-tag">Canal: FisioOnline</span>
+      </div>
+
+      <p className="alert info" style={{ marginTop: "14px" }}>
+        <strong>Importante:</strong> este contenido educativo es una guía de apoyo y no sustituye la valoración médica presencial de tu especialista.
+      </p>
+
+      <div className="exercise-tabs" role="tablist" aria-label="Selección de ejercicio" style={{ display: "flex", gap: "8px", flexWrap: "wrap", margin: "16px 0" }}>
+        {ejercicios.map((ej) => {
+          const seleccionado = ej.id === activo.id;
+          return (
+            <button
+              key={ej.id}
+              type="button"
+              role="tab"
+              aria-selected={seleccionado}
+              className={seleccionado ? "btn-primary" : "btn-secondary"}
+              style={{ fontSize: "14px", padding: "8px 14px" }}
+              onClick={() => {
+                if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+                setLeyendoVoz(false);
+                setEjercicioActivoId(ej.id);
+              }}
+            >
+              {seleccionado ? "▶ " : ""}{ej.titulo}
+            </button>
+          );
+        })}
+      </div>
+
+      <article className="eje multimedia-card">
+        <div>
+          <p className="eyebrow">{activo.canal} &bull; {activo.especialista} &bull; {activo.duracion}</p>
+          <h3>{activo.titulo}</h3>
+          <p>{activo.desc}</p>
+        </div>
+
+        <video
+          key={activo.id}
+          controls
+          preload="metadata"
+          poster="/ejercicios/movilidad-hombro.svg"
+          style={{ width: "100%", maxHeight: "440px", borderRadius: "10px", background: "#000" }}
+        >
+          <source src={activo.video} type="video/mp4" />
+          <track kind="captions" src={activo.vtt} srcLang="es" label="Español" default />
+          Su navegador no puede reproducir el video. Consulte la transcripción disponible debajo.
+        </video>
+
+        <details className="transcripcion-box" open>
+          <summary>
+            <strong>Leer transcripción completa ({activo.titulo})</strong>
+          </summary>
+          <div className="transcripcion-content">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "10px", margin: "10px 0" }}>
+              <p style={{ margin: 0, fontSize: "13.5px", color: "var(--muted)" }}>
+                <strong>Canal:</strong> {activo.canal} &bull; <strong>Especialista:</strong> {activo.especialista} &bull; <strong>Nivel:</strong> {activo.nivel} &bull; <strong>Duración:</strong> {activo.duracion}
+              </p>
+              {"speechSynthesis" in window && (
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  style={{ fontSize: "13px", padding: "6px 12px" }}
+                  onClick={hablarTranscripcion}
+                >
+                  {leyendoVoz ? "⏹ Detener lectura" : "🔊 Escuchar transcripción"}
+                </button>
+              )}
+            </div>
+
+            <div style={{ background: "#edf2fa", padding: "12px 16px", borderRadius: "8px", margin: "12px 0" }}>
+              <h4 style={{ margin: "0 0 6px", color: "var(--primary-dark)" }}>Pasos clave explicados en el video:</h4>
+              <ol style={{ margin: 0, paddingLeft: "20px" }}>
+                {activo.pasos.map((paso, idx) => (
+                  <li key={idx} style={{ marginBottom: "4px" }}>{paso}</li>
+                ))}
+              </ol>
+            </div>
+
+            <h4 style={{ margin: "14px 0 6px", color: "var(--primary-dark)" }}>Transcripción textual de la locución:</h4>
+            {activo.transcripcion.split("\n\n").map((parrafo, idx) => (
+              <p key={idx} style={{ margin: "8px 0", lineHeight: "1.6" }}>{parrafo}</p>
+            ))}
+          </div>
+        </details>
+      </article>
+
+      <h3 style={{ marginTop: "24px", marginBottom: "8px" }}>Catálogo de ejercicios de rehabilitación</h3>
+      <p className="muted" style={{ margin: "0 0 14px" }}>
+        Todos los videos provienen del mismo canal especializado (<strong>FisioOnline</strong>) para garantizar coherencia médica y técnica.
+      </p>
+      <div className="exercise-grid">
+        {ejercicios.map((item) => (
+          <article
+            key={item.id}
+            className={`eje ${item.id === activo.id ? "eje-seleccionado" : ""}`}
+            style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}
+          >
+            <div>
+              <p className="eyebrow" style={{ marginBottom: "4px" }}>{item.canal} &bull; {item.duracion}</p>
+              <h3>{item.titulo}</h3>
+              <p><strong>Nivel:</strong> {item.nivel}</p>
+              <p>{item.desc}</p>
+            </div>
+            <button
+              type="button"
+              className={item.id === activo.id ? "btn-primary" : "btn-secondary"}
+              style={{ marginTop: "12px", width: "100%" }}
+              onClick={() => {
+                if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+                setLeyendoVoz(false);
+                setEjercicioActivoId(item.id);
+              }}
+            >
+              {item.id === activo.id ? "▶ Viendo ahora" : "Ver video y transcripción"}
+            </button>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+

@@ -49,7 +49,10 @@ Son necesidades de diseño, no categorías que la persona deba declarar. Cualqui
 - Los avatares decorativos se ocultan al lector; las horas se agrupan bajo una etiqueta y el video tiene subtítulos y transcripción.
 
 ### 8. Multimedia
-- Ejercicios: video MP4 reproducible con subtítulos WebVTT, póster y transcripción escrita.
+- **Catálogo de ejercicios guiados:** videos MP4 con locución y audio real procedentes de un canal médico especializado único (**FisioOnline**), cubriendo hombro, rodilla y respiración diafragmática.
+- **Subtítulos sincronizados:** archivos WebVTT vinculados mediante `<track kind="captions">` para seguimiento visual y personas con discapacidad auditiva.
+- **Transcripción textual completa:** panel desplegable accesible (`<details>`) con los pasos clave y la transcripción literal de la locución.
+- **Voz asistida:** opción para escuchar la transcripción por síntesis de voz (`speechSynthesis`) para personas con discapacidad visual o fatiga visual.
 
 ## Cómo probarlo
 1. `cd frontend && npm run dev`
