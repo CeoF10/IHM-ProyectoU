@@ -17,7 +17,7 @@ La solicitud de cita usa **un solo recorrido de tres pasos** para todas las pers
 7. Recordatorios de próximas citas.
 8. Información del centro.
 
-Las citas y los horarios usan datos simulados; la dirección, el teléfono y la foto del hospital proceden del IESS. Los horarios no permiten reservar una hora pasada ni una ocupada en la sesión.
+Las citas y los horarios usan datos simulados; la dirección, el teléfono y la foto del hospital proceden del IESS. Los horarios no permiten reservar una hora pasada ni una ocupada en la sesión. Desde «Disponibilidad» se puede elegir un cupo para iniciar la misma solicitud guiada con profesional y fecha preparados.
 
 ## Ejecutar
 

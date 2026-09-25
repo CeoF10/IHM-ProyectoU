@@ -3,23 +3,21 @@ import { especialistas, ejercicios, centroInfo } from "../data/mock";
 import { fechaLocal, obtenerHorariosDisponibles, obtenerProximasCitas } from "../utils/appointments";
 import Icon from "./Icon";
 
-function Recordatorios({ citas }) {
+function Recordatorios({ citas, onNavigate }) {
   const [ahora, setAhora] = useState(() => new Date());
   useEffect(() => {
     const reloj = setInterval(() => setAhora(new Date()), 30000);
     return () => clearInterval(reloj);
   }, []);
   const proximas = obtenerProximasCitas(citas, ahora);
-  return <section className="card" aria-labelledby="recordatorios-titulo">
-    <h2 id="recordatorios-titulo">Tus próximos recordatorios</h2>
-    {proximas.length === 0 ? <p role="status">No tienes citas pendientes por venir. Al confirmar una cita, aparecerá aquí.</p> :
-      <ul className="reminder-list">{proximas.map((cita) => <li key={cita.id} className="alert">
-        <h3>{cita.esp}</h3>
-        <p>{cita.especialista}</p>
-        <p><time dateTime={cita.fecha + "T" + cita.hora}>{new Date(cita.fecha + "T" + cita.hora).toLocaleString("es-EC", { dateStyle: "full", timeStyle: "short" })}</time></p>
-        <p>Llega 15 minutos antes de tu cita.</p>
+  return <section className="card reminders-page" aria-labelledby="recordatorios-titulo">
+    <div className="section-heading"><h2 id="recordatorios-titulo">Próximas citas</h2><p>Ten a mano los detalles de tu siguiente visita.</p></div>
+    {proximas.length === 0 ? <div className="empty-state" role="status"><span className="empty-state-icon"><Icon name="calendar" /></span><div><h3>Todo al día</h3><p>Cuando confirmes una cita, verás aquí su fecha y hora.</p><button type="button" className="btn-primary" onClick={() => onNavigate("cita")}>Solicitar cita</button></div></div> :
+      <ul className="reminder-list">{proximas.map((cita) => <li key={cita.id} className="reminder-item">
+        <div className="reminder-date"><strong>{new Date(cita.fecha + "T12:00:00").toLocaleDateString("es-EC", { day: "2-digit" })}</strong><span>{new Date(cita.fecha + "T12:00:00").toLocaleDateString("es-EC", { month: "short" })}</span></div>
+        <div><h3>{cita.esp}</h3><p>{cita.especialista}</p><p><Icon name="clock" /> <time dateTime={cita.fecha + "T" + cita.hora}>{cita.hora}</time> · {centroInfo.nombre}</p></div>
       </li>)}</ul>}
-    <p className="alert info">Recuerda traer tu documento de identificación y orden médica.</p>
+    <div className="visit-prep"><h3>Antes de acudir</h3><ul><li><Icon name="check" /> Documento de identidad</li><li><Icon name="check" /> Indicación médica</li><li><Icon name="check" /> Llega 15 minutos antes</li></ul></div>
   </section>;
 }
 
@@ -45,7 +43,7 @@ function RegistroForm({ perfil, onSaveProfile }) {
     setErrores(nuevos);
     if (Object.keys(nuevos).length === 0) {
       onSaveProfile({ nombre: datos.nombre.trim(), correo: datos.correo.trim() });
-      setMensaje("Tus datos se guardaron para esta sesión. Tu nombre aparecerá al solicitar una cita.");
+      setMensaje("Datos guardados. Tu nombre aparecerá al solicitar una cita.");
     } else {
       setMensaje("");
     }
@@ -79,32 +77,33 @@ function proximosDiasLaborables(cantidad = 5) {
 export default function InfoPanels({ seccion, citas, perfil, onSaveProfile, onChangeStatus, onReschedule, onClearData, onLoadDemo, onNavigate, onChooseSpecialist }) {
   if (seccion === "especialistas") return <Especialistas onChooseSpecialist={onChooseSpecialist} />;
 
-  if (seccion === "calendario") return <section className="card" aria-labelledby="calendario-titulo">
-    <h2 id="calendario-titulo">Disponibilidad de los próximos días</h2>
+  if (seccion === "calendario") return <section className="card availability-page" aria-labelledby="calendario-titulo">
+    <div className="section-heading"><h2 id="calendario-titulo">Próximos cinco días</h2><p>Elige un cupo para continuar con la solicitud.</p></div>
+    <p className="mobile-scroll-hint">Desliza la tabla para ver más profesionales.</p>
     <div className="table-scroll" tabIndex="0" aria-label="Tabla desplazable de disponibilidad">
       <table className="calendar-table">
         <caption className="sr-only">Cantidad de horarios disponibles por profesional y día</caption>
-        <thead><tr><th scope="col">Fecha</th>{especialistas.map((item) => <th scope="col" key={item.id}>{item.nombre}</th>)}</tr></thead>
+        <thead><tr><th scope="col">Fecha</th>{especialistas.map((item) => <th scope="col" key={item.id}><span>{item.nombre}</span><small>{item.especialidad}</small></th>)}</tr></thead>
         <tbody>{proximosDiasLaborables().map((dia) => {
           const fecha = fechaLocal(dia);
           return <tr key={fecha}>
             <th scope="row">{dia.toLocaleDateString("es-EC", { weekday: "short", day: "numeric", month: "short" })}</th>
             {especialistas.map((item) => {
               const total = obtenerHorariosDisponibles(item.nombre, fecha, citas).length;
-              return <td key={item.id} className={total ? "slot free" : "slot occ"}>{total ? `${total} cupos` : "Sin atención"}</td>;
+              return <td key={item.id} className={total ? "slot free" : "slot occ"}>{total ? <button type="button" className="availability-choice" onClick={() => onChooseSpecialist(item, fecha)} aria-label={`${total} cupos con ${item.nombre} el ${dia.toLocaleDateString("es-EC", { dateStyle: "full" })}. Solicitar cita.`}><strong>{total} cupos</strong><span>Elegir horario</span></button> : <span className="no-slots">Sin atención</span>}</td>;
             })}
           </tr>;
         })}</tbody>
       </table>
-    </div>
+    </div><p className="availability-hint">Los horarios concretos se muestran al continuar con la cita.</p>
   </section>;
 
   if (seccion === "historial") return <section className="card" aria-labelledby="historial-titulo">
-    <h2 id="historial-titulo">Mis citas</h2>
-    {citas.length === 0 ? <div className="empty-appointments"><p className="muted">Aún no tienes citas. Elige un profesional y reserva un horario disponible.</p><button type="button" className="btn-primary" onClick={() => onNavigate("cita")}>Solicitar una cita</button></div> : <div className="appointment-list">
+    <div className="section-heading"><h2 id="historial-titulo">Tus citas</h2><p>{citas.length ? `${citas.length} ${citas.length === 1 ? "cita registrada" : "citas registradas"}` : "Consulta aquí tus solicitudes."}</p></div>
+    {citas.length === 0 ? <div className="empty-state"><span className="empty-state-icon"><Icon name="calendar" /></span><div><h3>Aún no tienes citas</h3><p>Elige un profesional y un horario para empezar.</p><button type="button" className="btn-primary" onClick={() => onNavigate("cita")}>Solicitar una cita</button></div></div> : <div className="appointment-list">
       {citas.map((cita) => <article className="appointment-card" key={cita.id}>
-        <div><p className="eyebrow">Código {cita.codigo}</p>{cita.esDemo && <p className="demo-record-label">Cita de ejemplo</p>}<h3>{cita.esp}</h3><p>{cita.especialista}</p></div>
-        <dl><div><dt>Paciente</dt><dd>{cita.nombre}</dd></div><div><dt>Fecha</dt><dd>{cita.fecha} · {cita.hora}</dd></div><div><dt>Estado</dt><dd><span className={`status status-${(cita.estado || "Pendiente").toLowerCase()}`}>{cita.estado || "Pendiente"}</span></dd></div></dl>
+        <div className="appointment-top"><div className="appointment-date"><strong>{new Date(cita.fecha + "T12:00:00").toLocaleDateString("es-EC", { day: "2-digit" })}</strong><span>{new Date(cita.fecha + "T12:00:00").toLocaleDateString("es-EC", { month: "short" })}</span></div><div><p className="eyebrow">Código {cita.codigo}</p>{cita.esDemo && <p className="demo-record-label">Cita de ejemplo</p>}<h3>{cita.esp}</h3><p>{cita.especialista}</p></div></div>
+        <dl><div><dt>Paciente</dt><dd>{cita.nombre}</dd></div><div><dt>Hora</dt><dd>{cita.hora}</dd></div><div><dt>Estado</dt><dd><span className={`status status-${(cita.estado || "Pendiente").toLowerCase()}`}>{cita.estado || "Pendiente"}</span></dd></div></dl>
         <div className="appointment-actions">
           <button type="button" className="btn-secondary" onClick={() => onReschedule(cita)} disabled={cita.estado !== "Pendiente"}>Reprogramar</button>
           <button type="button" className="btn-danger" onClick={() => {
@@ -125,7 +124,7 @@ export default function InfoPanels({ seccion, citas, perfil, onSaveProfile, onCh
   if (seccion === "ejercicios") return <EjerciciosSection />;
 
 
-  if (seccion === "recordatorios") return <Recordatorios citas={citas} />;
+  if (seccion === "recordatorios") return <Recordatorios citas={citas} onNavigate={onNavigate} />;
 
   if (seccion === "centros") return <section className="card center-page" aria-labelledby="centros-titulo">
     <div className="center-hero"><img src={centroInfo.foto} alt="Fachada del Hospital del IESS en Guaranda" />
@@ -133,13 +132,13 @@ export default function InfoPanels({ seccion, citas, perfil, onSaveProfile, onCh
     <div className="center-details"><div><h3>Ubicación</h3><address>{centroInfo.direccion}</address><a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(centroInfo.nombre + " " + centroInfo.direccion)}`} target="_blank" rel="noreferrer">Ver cómo llegar ↗</a></div>
       <div><h3>Contacto</h3><p><a href={`tel:+593${centroInfo.telefono.replace(/\D/g, "").slice(1)}`}>{centroInfo.telefono}</a></p><a href={centroInfo.fuente} target="_blank" rel="noreferrer">Consultar directorio del IESS ↗</a></div>
       <div><h3>Antes de acudir</h3><p>Ten a mano tu documento de identidad y la indicación médica correspondiente.</p></div></div>
+    <div className="center-next"><div><h3>¿Listo para solicitar una cita?</h3><p>Elige un profesional y continúa con la solicitud guiada.</p></div><button type="button" className="btn-primary" onClick={() => onNavigate("cita")}>Solicitar cita</button></div>
     <p className="image-credit">Imagen: <a href={centroInfo.fuenteFoto} target="_blank" rel="noreferrer">archivo institucional del IESS</a>.</p>
   </section>;
 
-  if (seccion === "registro") return <section className="card" aria-labelledby="registro-titulo">
-    <h2 id="registro-titulo">Mis datos</h2>
-    <p className="muted">Guarda tu nombre para completar más rápido una solicitud.</p>
-    <RegistroForm perfil={perfil} onSaveProfile={onSaveProfile} />
+  if (seccion === "registro") return <section className="card profile-page" aria-labelledby="registro-titulo">
+    <div className="profile-intro"><span className="profile-mark"><Icon name="user" /></span><h2 id="registro-titulo">Tus datos, a mano</h2><p>Tu nombre se completa automáticamente al solicitar una cita.</p><div className="profile-detail"><Icon name="check" /> Puedes actualizarlos cuando quieras</div></div>
+    <div className="profile-form"><h3>Información personal</h3><RegistroForm perfil={perfil} onSaveProfile={onSaveProfile} /></div>
   </section>;
 
   return null;
@@ -147,12 +146,15 @@ export default function InfoPanels({ seccion, citas, perfil, onSaveProfile, onCh
 
 function Especialistas({ onChooseSpecialist }) {
   const [consulta, setConsulta] = useState("");
-  const filtrados = especialistas.filter((item) => `${item.nombre} ${item.especialidad}`.toLocaleLowerCase("es").includes(consulta.trim().toLocaleLowerCase("es")));
+  const [area, setArea] = useState("Todas");
+  const areas = ["Todas", ...new Set(especialistas.map((item) => item.especialidad))];
+  const filtrados = especialistas.filter((item) => (area === "Todas" || item.especialidad === area) && `${item.nombre} ${item.especialidad}`.toLocaleLowerCase("es").includes(consulta.trim().toLocaleLowerCase("es")));
   return <section className="card" aria-labelledby="especialistas-titulo">
-    <h2 id="especialistas-titulo">Profesionales disponibles</h2>
+    <h2 id="especialistas-titulo">Elige tu profesional</h2>
     <p className="section-lead">Encuentra el área de atención que necesitas y continúa con una sola solicitud de cita.</p>
     <label htmlFor="buscar-profesional">Buscar profesional o especialidad</label>
     <input id="buscar-profesional" type="search" value={consulta} onChange={(event) => setConsulta(event.target.value)} placeholder="Ej. fisioterapia" />
+    <div className="professional-filters" role="group" aria-label="Filtrar por especialidad">{areas.map((opcion) => <button type="button" className={area === opcion ? "filter-chip active" : "filter-chip"} key={opcion} aria-pressed={area === opcion} onClick={() => setArea(opcion)}>{opcion}</button>)}</div>
     <p className="sr-only" role="status" aria-live="polite">{filtrados.length} profesionales encontrados.</p>
     {filtrados.length ? <ul className="professional-grid">{filtrados.map((item) => <li key={item.id} className="professional-card">
       <span className={`professional-portrait portrait-${item.id}`} aria-hidden="true" />
@@ -193,47 +195,19 @@ function EjerciciosSection() {
   }, [ejercicioActivoId]);
 
   return (
-    <section className="card" aria-labelledby="ejercicios-titulo">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px" }}>
-        <div>
-          <h2 id="ejercicios-titulo">Ejercicios de rehabilitación guiados</h2>
-          <p className="muted" style={{ margin: "4px 0 0" }}>
-            Videos explicativos con audio, subtítulos sincronizados y transcripción accesible. Fuente: <strong>FisioOnline</strong>.
-          </p>
-        </div>
-        <span className="canal-tag">Canal: FisioOnline</span>
+    <section className="card exercises-page" aria-labelledby="ejercicios-titulo">
+      <div className="section-heading"><h2 id="ejercicios-titulo">Muévete a tu ritmo</h2><p>Elige un video. Todos incluyen subtítulos y transcripción.</p></div>
+      <div className="exercise-workspace">
+      <div className="exercise-playlist" aria-label="Elegir ejercicio">
+        {ejercicios.map((ej) => <button key={ej.id} type="button" className={ej.id === activo.id ? "playlist-item selected" : "playlist-item"} aria-pressed={ej.id === activo.id} onClick={() => {
+          if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+          setLeyendoVoz(false);
+          setEjercicioActivoId(ej.id);
+        }}><img src={ej.poster} alt="" /><span><strong>{ej.titulo}</strong><small>{ej.duracion} · {ej.nivel}</small></span></button>)}
       </div>
-
-      <p className="alert info" style={{ marginTop: "14px" }}>
-        <strong>Importante:</strong> este contenido educativo es una guía de apoyo y no sustituye la valoración médica presencial de tu especialista.
-      </p>
-
-      <div className="exercise-tabs" role="tablist" aria-label="Selección de ejercicio" style={{ display: "flex", gap: "8px", flexWrap: "wrap", margin: "16px 0" }}>
-        {ejercicios.map((ej) => {
-          const seleccionado = ej.id === activo.id;
-          return (
-            <button
-              key={ej.id}
-              type="button"
-              role="tab"
-              aria-selected={seleccionado}
-              className={seleccionado ? "btn-primary" : "btn-secondary"}
-              style={{ fontSize: "14px", padding: "8px 14px" }}
-              onClick={() => {
-                if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-                setLeyendoVoz(false);
-                setEjercicioActivoId(ej.id);
-              }}
-            >
-              {ej.titulo}
-            </button>
-          );
-        })}
-      </div>
-
       <article className="eje multimedia-card">
         <div>
-          <p className="eyebrow">{activo.canal} &bull; {activo.especialista} &bull; {activo.duracion}</p>
+          <p className="eyebrow">{activo.duracion} · {activo.nivel}</p>
           <h3>{activo.titulo}</h3>
           <p>{activo.desc}</p>
         </div>
@@ -252,7 +226,7 @@ function EjerciciosSection() {
 
         <details className="transcripcion-box">
           <summary>
-            <strong>Leer transcripción completa ({activo.titulo})</strong>
+            <strong>Pasos y transcripción</strong>
           </summary>
           <div className="transcripcion-content">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "10px", margin: "10px 0" }}>
@@ -287,36 +261,8 @@ function EjerciciosSection() {
           </div>
         </details>
       </article>
-
-      <h3 style={{ marginTop: "24px", marginBottom: "8px" }}>Más ejercicios</h3>
-      <div className="exercise-grid">
-        {ejercicios.map((item) => (
-          <article
-            key={item.id}
-            className={`eje ${item.id === activo.id ? "eje-seleccionado" : ""}`}
-            style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}
-          >
-            <div>
-              <img className="exercise-thumb" src={item.poster} alt="" />
-              <p className="eyebrow" style={{ marginBottom: "4px" }}>{item.duracion}</p>
-              <h3>{item.titulo}</h3>
-              <p>{item.nivel}</p>
-            </div>
-            <button
-              type="button"
-              className={item.id === activo.id ? "btn-primary" : "btn-secondary"}
-              style={{ marginTop: "12px", width: "100%" }}
-              onClick={() => {
-                if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-                setLeyendoVoz(false);
-                setEjercicioActivoId(item.id);
-              }}
-            >
-              {item.id === activo.id ? "Viendo ahora" : "Ver video y transcripción"}
-            </button>
-          </article>
-        ))}
       </div>
+      <p className="exercise-source">Videos: {activo.canal}. Esta guía acompaña la atención profesional; detén el ejercicio si sientes dolor.</p>
     </section>
   );
 }

@@ -331,7 +331,7 @@ function Confirmacion({ cita, esReprogramacion, onModificar, onConfirmar }) {
         <div><dt>Paciente</dt><dd>{cita.nombre}</dd></div>
         <div><dt>Especialidad</dt><dd>{cita.esp}</dd></div>
         <div><dt>Profesional</dt><dd>{cita.especialista}</dd></div>
-        <div><dt>Fecha y hora</dt><dd>{cita.fecha} · {cita.hora}</dd></div>
+        <div><dt>Fecha y hora</dt><dd><time dateTime={cita.fecha + "T" + cita.hora}>{new Date(cita.fecha + "T" + cita.hora).toLocaleString("es-EC", { dateStyle: "long", timeStyle: "short" })}</time></dd></div>
         <div><dt>Centro</dt><dd>{centroInfo.nombre}</dd></div>
       </dl>
       <div className="acciones-confirmacion">
@@ -524,6 +524,16 @@ export default function App() {
     recordatorios: "Recordatorios",
     registro: "Mis datos",
   };
+  const descripcionesSeccion = {
+    cita: "Completa tus datos, elige un profesional y selecciona una hora.",
+    historial: "Consulta, reprograma o cancela tus citas.",
+    especialistas: "Conoce las áreas de atención y elige un profesional.",
+    centros: "Ubicación y contacto del Hospital Básico Guaranda.",
+    calendario: "Compara los cupos disponibles durante los próximos días.",
+    ejercicios: "Videos con subtítulos, pasos y transcripción.",
+    recordatorios: "Prepara tus próximas visitas.",
+    registro: "Guarda tus datos para completar más rápido una solicitud.",
+  };
 
   return (
     <div className={clases}>
@@ -563,19 +573,26 @@ export default function App() {
         }} /> : <section className="hero hero-compact">
           <div className="hero-copy">
             <h1 ref={tituloRef} tabIndex={-1}>{titulosSeccion[seccion]}</h1>
+            <p>{descripcionesSeccion[seccion]}</p>
           </div>
         </section>}
         {ok && <p role="status" className="okmsg">{ok}</p>}
         {seccion === "cita" && (citaPendiente ? (
           <Confirmacion cita={citaPendiente} esReprogramacion={!!editandoId} onModificar={() => setCitaPendiente(null)} onConfirmar={guardarCita} />
         ) : (
-          <>
+          <div className="booking-layout">
+            <div>
             {editandoId && <p className="alert info" role="status">Estás reprogramando una cita. Revisa la nueva fecha y hora antes de confirmar.</p>}
             <GuiaPasoAPasoForm form={borrador} setForm={setBorrador} citas={citas} editandoId={editandoId} onConfirm={prepararConfirmacion} />
-          </>
+            </div>
+            <aside className="booking-context" aria-label="Información del centro">
+              <img src={centroInfo.foto} alt="Fachada del Hospital del IESS en Guaranda" />
+              <div><p className="eyebrow">Atención en Guaranda</p><h2>{centroInfo.nombre}</h2><p>{centroInfo.direccion}</p><button type="button" className="context-link" onClick={() => navegar("centros")}>Ver ubicación y contacto</button></div>
+            </aside>
+          </div>
         ))}
-        {seccion !== "cita" && seccion !== "inicio" && <InfoPanels seccion={seccion} citas={citas} perfil={perfil} onSaveProfile={setPerfil} onChangeStatus={actualizarEstado} onReschedule={reprogramar} onClearData={borrarDatos} onLoadDemo={cargarCitasDemo} onNavigate={navegar} onChooseSpecialist={(item) => {
-          setBorrador({ ...borradorVacio(), nombre: perfil?.nombre || "", esp: item.especialidad, especialista: item.nombre });
+        {seccion !== "cita" && seccion !== "inicio" && <InfoPanels seccion={seccion} citas={citas} perfil={perfil} onSaveProfile={setPerfil} onChangeStatus={actualizarEstado} onReschedule={reprogramar} onClearData={borrarDatos} onLoadDemo={cargarCitasDemo} onNavigate={navegar} onChooseSpecialist={(item, fecha = "") => {
+          setBorrador({ ...borradorVacio(), nombre: perfil?.nombre || "", esp: item.especialidad, especialista: item.nombre, fecha });
           navegar("cita");
         }} />}
       </main>

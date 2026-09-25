@@ -56,7 +56,7 @@ export default function GuiaPasoAPasoForm({ form, setForm, citas, editandoId, on
 
   return (
     <section className="card guiada" aria-label="Solicitud de cita con guía paso a paso">
-      <div className="form-header"><h2 ref={tituloRef} tabIndex={-1}>{titulosPaso[paso - 1]}</h2></div>
+      <div className="form-header"><div><p className="eyebrow">Paso {paso} de 3</p><h2 ref={tituloRef} tabIndex={-1}>{titulosPaso[paso - 1]}</h2></div></div>
       <ol className="pasos" aria-label={`Paso ${paso} de 3`}>
         <li aria-current={paso === 1 ? "step" : undefined} className={paso >= 1 ? "on" : ""}>1. Datos</li>
         <li aria-current={paso === 2 ? "step" : undefined} className={paso >= 2 ? "on" : ""}>2. Profesional</li>
@@ -65,7 +65,7 @@ export default function GuiaPasoAPasoForm({ form, setForm, citas, editandoId, on
 
       {error && <p id="solicitud-error" ref={errorRef} tabIndex={-1} role="alert" className="err grande">{error}</p>}
 
-      {paso === 1 && <div>
+      {paso === 1 && <div className="form-fields">
         <label htmlFor="guia-nombre">Nombre completo *</label>
         <input id="guia-nombre" className="big" value={form.nombre} onChange={(ev) => actualizar("nombre", ev.target.value)} placeholder="Ejemplo: Rosa García" autoComplete="name" aria-invalid={campoError === "nombre"} aria-describedby={campoError === "nombre" ? "solicitud-error" : undefined} />
         <label htmlFor="guia-identificador">Número de cédula *</label>
@@ -83,7 +83,7 @@ export default function GuiaPasoAPasoForm({ form, setForm, citas, editandoId, on
         </li>)}
       </ul>}
 
-      {paso === 3 && <div>
+      {paso === 3 && <div className="form-fields">
         <label htmlFor="guia-fecha">Día de la cita *</label>
         <input id="guia-fecha" type="date" min={fechaMinima} className="big" value={form.fecha} onChange={(ev) => actualizar("fecha", ev.target.value, { hora: "" })} aria-invalid={campoError === "fecha"} aria-describedby={campoError === "fecha" ? "solicitud-error" : undefined} />
         <p className="field-label grande" id="guia-hora">Horas disponibles *</p>

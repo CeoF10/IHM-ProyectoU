@@ -31,6 +31,7 @@ Son necesidades de diseño, no categorías que la persona deba declarar. Cualqui
 ### 4. Cantidad de información
 - Una tarea por pantalla: datos, profesional y fecha/hora; confirmación en un resumen separado.
 - Permite volver sin perder la información ya ingresada.
+- Los cupos de la tabla y las fichas profesionales inician el mismo formulario con fecha o profesional preseleccionados; no se crean variantes para cada perfil.
 
 ### 5. Mensajes de error
 - `role=alert`, ejemplo de corrección: «Escribe los 10 dígitos de tu cédula, sin espacios ni guiones».
@@ -54,6 +55,7 @@ Son necesidades de diseño, no categorías que la persona deba declarar. Cualqui
 - **Transcripción textual completa:** panel desplegable accesible (`<details>`) con los pasos clave y la transcripción literal de la locución.
 - **Voz asistida:** opción para escuchar la transcripción por síntesis de voz (`speechSynthesis`) para personas con discapacidad visual o fatiga visual.
 - **Miniaturas contextualizadas:** imágenes extraídas de los propios videos reemplazan el dibujo genérico; el video usa la miniatura que corresponde a cada ejercicio.
+- **Selección sin duplicación:** una lista visual cambia el video principal. Los pasos y la transcripción permanecen en un panel desplegable para reducir el texto inicial.
 
 ### Información visual y fuentes
 - La portada reemplaza el dibujo abstracto por una escena ilustrativa de rehabilitación. La solicitud conserva el lugar principal y muestra sus tres pasos reales. Fotografías de ejercicios, profesionales y centro funcionan como accesos visuales, con texto visible para no depender solo de la imagen.
