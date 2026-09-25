@@ -8,7 +8,7 @@ Los usuarios tienen dificultades para conocer servicios disponibles, solicitar u
 
 ## 3. Objetivos
 - O1: Diseñar flujo de solicitud de cita usable en < 3 minutos.
-- O2: Cumplir 8 criterios IHM del reto (0.25 pts c/u).
+- O2: Evaluar la solicitud para los tres perfiles de usuario del enunciado.
 - O3: Prototipo frontend navegable sin backend, con datos mock.
 
 ## 4. Alcance
@@ -23,7 +23,7 @@ Los usuarios tienen dificultades para conocer servicios disponibles, solicitar u
 ## 5. Stakeholders / Roles (simulación empresa)
 - Product Owner (Tú): define prioridad
 - UX Researcher: personas, journeys
-- UI Designer: wireframes, 3 variantes
+- UI Designer: un flujo inclusivo para los 3 perfiles de usuario
 - Frontend Dev: React prototipo
 - QA Accesibilidad: checklist WCAG, teclado, lector pantalla
 
@@ -31,20 +31,20 @@ Los usuarios tienen dificultades para conocer servicios disponibles, solicitar u
 - RF1 Registro de usuario: formulario validado, mensajes error claros.
 - RF2 Solicitud de citas: seleccionar especialidad, especialista, fecha/hora, confirmar.
 - RF3 Consulta especialistas: lista con identificador visual, especialidad y horario.
-- RF4 Calendario disponibilidad: vista semanal, slots libres/ocupados.
-- RF5 Historial citas: tabla con estado (pendiente, atendida, cancelada).
+- RF4 Calendario disponibilidad: próximos días laborables y cantidad de cupos por profesional.
+- RF5 Historial citas: tarjetas con estado (pendiente, atendida, cancelada) y acciones para reprogramar o cancelar.
 - RF6 Recomendaciones ejercicios: fichas simuladas con referencia multimedia + descripción.
 - RF7 Recordatorios: banners/alertas simuladas.
-- RF8 Info centros: dirección, mapa, contacto IESS Guaranda.
+- RF8 Info centros: dirección, teléfono y horario simulados.
 
 ## 7. Requerimientos no funcionales IHM (los 8 ítems evaluados)
-1. Tamaño botones: min 44x44px, en variante adulto mayor/discapacidad 56-64px.
+1. Tamaño botones: objetivos de al menos 44x44px y opción general para ampliar controles.
 2. Contraste: AA mínimo 4.5:1, texto/fondo.
-3. Tipografía: sans-serif 16px base, 18-20px adulto mayor, escalable.
+3. Tipografía: sans-serif 16px base, con opción general para ampliarla.
 4. Cantidad información: progresiva, 1 tarea por pantalla, sin sobrecarga.
 5. Mensajes error: visibles, lenguaje simple, ejemplo corrección.
 6. Navegación teclado: orden de Tab lógico, foco visible, Enter/Espacio accionan.
-7. Lector pantalla: labels, aria-label, roles, alt en imágenes, h1 único.
+7. Lector pantalla: etiquetas, nombres accesibles, regiones de estado y un h1 por pantalla.
 8. Multimedia: iconos + texto, video ejercicios subtitulado, audio opcional.
 
 ## 8. Decisión sobre el flujo de interacción

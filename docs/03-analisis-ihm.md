@@ -2,20 +2,29 @@
 
 ## Reto: una solicitud simple, guiada y accesible
 
-Se descartó pedirle a la persona que elija entre “Vista rápida”, “Paso a paso” y “Accesibilidad reforzada”. Esa decisión añadía una pantalla y obligaba a entender diferencias entre formatos antes de solicitar una cita. El prototipo ahora presenta un único recorrido de tres pasos, con una tarea por pantalla, opción de volver y resumen antes de confirmar. La accesibilidad está integrada y sus preferencias generales se pueden ajustar cuando haga falta.
+Los tres perfiles del enunciado usan la misma pantalla de solicitud. El recorrido tiene tres pasos, con una tarea por pantalla, opción de volver y resumen antes de confirmar. La accesibilidad está integrada y sus preferencias generales se pueden ajustar cuando haga falta, sin pedir a nadie que declare edad o discapacidad.
+
+## Cómo responde a los tres tipos de usuarios
+
+- **Persona joven:** el recorrido comienza directamente desde Inicio o Nueva cita, muestra el avance y permite revisar los datos antes de confirmar.
+- **Adulto mayor:** presenta una tarea por paso, instrucciones breves, controles amplios y opciones para aumentar el texto y los botones.
+- **Persona con discapacidad visual o motriz:** ofrece etiquetas asociadas, errores anunciados y vinculados al campo, navegación por teclado, foco visible, lectura opcional por voz y controles amplios. La compatibilidad con lectores de pantalla debe comprobarse con pruebas manuales.
+
+Son necesidades de diseño, no categorías que la persona deba declarar. Cualquier usuario puede activar las mismas ayudas.
 
 ### 1. Tamaño de botones
 - El recorrido usa acciones amplias y horarios seleccionables, con áreas de interacción cómodas en todos los pasos.
 - Tamaño de botones ajustable desde Accesibilidad sin cambiar de formulario.
 
 ### 2. Contraste e identidad visual
-- Paleta inspirada en los azules y el acento dorado observados en el portal del IESS y descritos en el análisis cromático de la Tarea 3: azul oscuro #0E3A65, azul medio #1B4F91 y dorado #F2B705. Es una adaptación para el prototipo, no una reproducción completa del manual de marca. El dorado se reserva para resaltar detalles y no para texto pequeño sobre blanco.
+- La cabecera adopta el azul `#004394` y el logotipo blanco publicados en [iess.gob.ec](https://www.iess.gob.ec/). El azul profundo `#092766` y el azul medio `#294e9b` aparecen en los estilos del portal; blanco y azul claro mantienen la lectura del prototipo. Los botones, acentos y estados usan esta misma familia de azules.
+- El logotipo identifica la referencia institucional, mientras los rótulos «Prototipo académico» y «No es un sitio oficial» distinguen la demostración del servicio real.
 - Texto principal #17223b sobre superficies blancas o gris claro.
 - Alto contraste con superficies negras y texto blanco en el encabezado y ayudas.
 - Foco con contorno blanco de 3px y anillo oscuro de 6px. La conformidad de todos los estados requiere medir sus combinaciones de color.
 
 ### 3. Tipografía
-- Base system-ui sans-serif 16px.
+- Base Verdana con reserva sans-serif, 16px.
 - La tipografía base mantiene legibilidad y puede ampliarse desde Accesibilidad.
 - Sin serifas, interlineado 1.5.
 
@@ -25,7 +34,7 @@ Se descartó pedirle a la persona que elija entre “Vista rápida”, “Paso a
 
 ### 5. Mensajes de error
 - `role=alert`, ejemplo de corrección: "Escribe únicamente los últimos 4 números. Ejemplo: 4567."
-- Mensajes directos con ejemplos de corrección; foco en el campo que necesita atención.
+- Mensajes directos con ejemplos de corrección; el foco pasa al mensaje de error.
 - Errores vinculados a sus campos mediante `aria-invalid` y `aria-describedby`.
 
 ### 6. Navegación teclado
@@ -35,12 +44,11 @@ Se descartó pedirle a la persona que elija entre “Vista rápida”, “Paso a
 - Foco visible de doble color para identificar el control activo.
 
 ### 7. Lector pantalla
-- Diseñado para NVDA/JAWS: labels asociados, h1 único, fieldset y `aria-live=polite` para anuncios. La compatibilidad debe validarse manualmente.
-- Botón 🔊 lee con speechSynthesis + texto en live region.
-- Alt / aria-label en avatar, video, grupos horas.
+- Preparado con etiquetas asociadas, un h1 por pantalla, nombres accesibles para los profesionales y regiones de estado. La compatibilidad con NVDA/JAWS debe validarse manualmente.
+- La lectura por voz es opcional y usa `speechSynthesis`; la información permanece escrita.
+- Los avatares decorativos se ocultan al lector; las horas se agrupan bajo una etiqueta y el video tiene subtítulos y transcripción.
 
 ### 8. Multimedia
-- Ejercicios: video MP4 reproducible con subtítulos WebVTT, póster y transcripción escrita.
 - Ejercicios: video MP4 reproducible con subtítulos WebVTT, póster y transcripción escrita.
 
 ## Cómo probarlo
@@ -49,7 +57,7 @@ Se descartó pedirle a la persona que elija entre “Vista rápida”, “Paso a
 3. Probar solo teclado: Tab hasta confirmar.
 4. Probar lector: NVDA/JAWS + Tab y registrar cuáles errores anuncia realmente.
 5. Mostrar Historial: guarda datos sanitizados únicamente durante la sesión del navegador (sin backend).
-6. Activar la lectura mediante el botón o la tecla de acceso `L` (el modificador depende del navegador y sistema operativo).
+6. Activar «Escuchar página» desde Accesibilidad y «Escuchar resumen» antes de confirmar.
 
 ## Frase para defender
 > "Los perfiles orientaron la accesibilidad, pero no le pedimos al paciente que se clasifique ni que elija un formulario. Todas las personas siguen el mismo recorrido claro, con ajustes disponibles cuando los necesitan."
@@ -60,9 +68,9 @@ El problema del proyecto es que las personas puedan conocer la atención de reha
 
 | Referente | Se tomó o adaptó | Se dejó fuera | Motivo relacionado con el problema |
 |---|---|---|---|
-| IESS | Azul institucional, acento dorado, acceso visible a citas y tarjetas de acceso directo. | Banner rotativo institucional, accesos de empleadores y afiliación, noticias y trámites generales. | El prototipo se concentra en rehabilitación en Guaranda y evita contenido que distraiga de encontrar atención y reservar. |
+| IESS | Azul institucional, logotipo blanco, acceso visible a citas y tarjetas de acceso directo. | Banner rotativo institucional, accesos de empleadores y afiliación, noticias y trámites generales. | El prototipo se concentra en rehabilitación en Guaranda y evita contenido que distraiga de encontrar atención y reservar. |
 | Hospital Vozandes | Jerarquía clara para la acción de agendar y organización visual por secciones. | Panel promocional, campañas, accesos institucionales y estilo vino/magenta. | Las promociones no ayudan a completar el recorrido de rehabilitación; se conserva la identidad del IESS para que el origen del servicio se entienda. |
-| Hospital Metropolitano | La idea de localizar profesionales y presentar disponibilidad de forma comparable. | Buscador masivo paginado, indicadores NPS/semáforo, blog y múltiples CTAs naranja. | Se incorpora una búsqueda sencilla por nombre o especialidad y una tabla semanal simulada; no se incorporan métricas que no forman parte de la atención ni hay datos para respaldarlas. |
+| Hospital Metropolitano | La idea de localizar profesionales y presentar disponibilidad de forma comparable. | Buscador masivo paginado, indicadores NPS/semáforo, blog y múltiples CTAs naranja. | Se incorpora una búsqueda sencilla por nombre o especialidad y una tabla de próximos días laborables; no se incorporan métricas que no forman parte de la atención ni hay datos para respaldarlas. |
 
 ### Elementos comunes que sí responden al proyecto
 

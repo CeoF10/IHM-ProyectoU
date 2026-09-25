@@ -18,13 +18,13 @@ function MovementIllustration() {
     <svg viewBox="0 0 260 270" role="img" aria-labelledby="movement-title">
       <title id="movement-title">Ilustración de movilidad de hombro</title>
       <circle cx="130" cy="135" r="112" fill="#EAF1F8" />
-      <path d="M50 157a92 92 0 0 1 151-75" fill="none" stroke="#F2B705" strokeWidth="8" strokeLinecap="round" />
-      <path d="m190 71 14 8-2-16" fill="none" stroke="#F2B705" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="119" cy="85" r="18" fill="#1B4F91" />
-      <path d="M114 106c-10 17-13 41-8 60l-26 38m30-38 38 12 13 32m-52-68-25-9-19 27m31-28 25-21 31-23m-63 90 44 2" fill="none" stroke="#0E3A65" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M178 70a65 65 0 0 1 32 50" fill="none" stroke="#1B4F91" strokeWidth="3" strokeDasharray="5 8" strokeLinecap="round" />
-      <circle cx="211" cy="125" r="5" fill="#F2B705" />
-      <path d="M65 223h132" stroke="#1B4F91" strokeWidth="3" strokeLinecap="round" opacity=".35" />
+      <path d="M50 157a92 92 0 0 1 151-75" fill="none" stroke="var(--primary-mid)" strokeWidth="8" strokeLinecap="round" />
+      <path d="m190 71 14 8-2-16" fill="none" stroke="var(--primary-mid)" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="119" cy="85" r="18" fill="var(--primary)" />
+      <path d="M114 106c-10 17-13 41-8 60l-26 38m30-38 38 12 13 32m-52-68-25-9-19 27m31-28 25-21 31-23m-63 90 44 2" fill="none" stroke="var(--primary-dark)" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M178 70a65 65 0 0 1 32 50" fill="none" stroke="var(--primary)" strokeWidth="3" strokeDasharray="5 8" strokeLinecap="round" />
+      <circle cx="211" cy="125" r="5" fill="var(--primary-mid)" />
+      <path d="M65 223h132" stroke="var(--primary)" strokeWidth="3" strokeLinecap="round" opacity=".35" />
     </svg>
     <figcaption>Movimiento, a tu ritmo</figcaption>
   </figure>;

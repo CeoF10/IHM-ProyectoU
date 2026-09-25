@@ -3,7 +3,7 @@ import GuiaPasoAPasoForm from "./components/GuiaPasoAPasoForm";
 import InfoPanels from "./components/InfoPanels";
 import Home from "./components/Home";
 import { especialistas } from "./data/mock";
-import { borradorVacio, crearCitasDemo, generarCodigo, quitarDatosSensibles } from "./utils/appointments";
+import { borradorVacio, crearCitasDemo, generarCodigo, obtenerHorariosDisponibles, quitarDatosSensibles } from "./utils/appointments";
 
 const preferenciasIniciales = { textoGrande: false, altoContraste: false, botonesGrandes: false };
 
@@ -130,13 +130,11 @@ export default function App() {
       const origen = sessionStorage.getItem("citas-ihm-sesion") || localStorage.getItem("citas-iess") || "[]";
       const guardadas = JSON.parse(origen);
       if (!Array.isArray(guardadas)) return [];
-      const modosAnteriores = { Joven: "Vista rápida", "Adulto mayor": "Guía paso a paso", Discapacidad: "Accesibilidad reforzada" };
-      return guardadas.map(({ perfil, ...cita }) => {
+      return guardadas.map((cita) => {
         const profesional = especialistas.find((item) => item.nombre === cita.especialista);
         return quitarDatosSensibles({
           ...cita,
           esp: cita.esp || profesional?.especialidad || "Especialidad no registrada",
-          modo: cita.modo || modosAnteriores[perfil] || "Vista rápida",
           id: cita.id || generarCodigo(Date.now() + Math.random() * 1000),
           codigo: cita.codigo || generarCodigo(Date.now() + Math.random() * 1000),
         });
@@ -163,7 +161,11 @@ export default function App() {
     }
   }, [preferencias]);
 
-  const navegar = (destino) => {
+  const navegar = (destino, conservarEdicion = false) => {
+    if (destino === "cita" && !conservarEdicion) {
+      setCitaPendiente(null);
+      setEditandoId(null);
+    }
     setSeccion(destino);
     setMenuAbierto(false);
     if (masRef.current) masRef.current.open = false;
@@ -178,6 +180,13 @@ export default function App() {
 
   const guardarCita = () => {
     if (!citaPendiente) return;
+    const horarios = obtenerHorariosDisponibles(citaPendiente.especialista, citaPendiente.fecha, citas, editandoId);
+    if (!horarios.includes(citaPendiente.hora)) {
+      setBorrador({ ...citaPendiente, hora: "" });
+      setCitaPendiente(null);
+      setOk("Ese horario ya no está disponible. Elige otro antes de confirmar.");
+      return;
+    }
     const codigo = editandoId || generarCodigo();
     const datos = quitarDatosSensibles({
       ...citaPendiente,
@@ -186,7 +195,7 @@ export default function App() {
       estado: "Pendiente",
     });
     setCitas((actuales) => editandoId
-      ? actuales.map((cita) => cita.id === editandoId ? datos : cita)
+      ? actuales.map((cita) => cita.id === editandoId ? { ...cita, ...datos } : cita)
       : [...actuales, datos]);
     setOk(`${editandoId ? "Cita reprogramada" : "Cita confirmada"}. Código: ${codigo}.`);
     setCitaPendiente(null);
@@ -213,7 +222,7 @@ export default function App() {
     });
     setEditandoId(cita.id);
     setCitaPendiente(null);
-    navegar("cita");
+    navegar("cita", true);
   };
 
   const borrarDatos = () => {
@@ -225,7 +234,7 @@ export default function App() {
   };
 
   const cargarCitasDemo = () => {
-    const demos = crearCitasDemo();
+    const demos = crearCitasDemo(citas);
     const existentes = new Set(citas.map((cita) => cita.codigo));
     const nuevas = demos.filter((cita) => !existentes.has(cita.codigo));
     if (nuevas.length === 0) {
@@ -265,7 +274,11 @@ export default function App() {
       <a href="#main" className="skip">Saltar al contenido</a>
       <header className="top">
         <div className="header-inner">
-          <div className="brand"><span className="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M8 26c4-10 10-14 16-11 4 2 7 7 8 14M11 16l5 2-1-5" fill="none" stroke="currentColor" strokeWidth="2.7" strokeLinecap="round" strokeLinejoin="round"/><circle cx="29" cy="12" r="3" fill="var(--gold)"/></svg></span><span><strong>Rehabilitación</strong><small>IESS · Guaranda</small></span></div>
+          <div className="brand">
+            <img className="brand-logo" src="/iess-logo.png" alt="IESS" width="112" height="42" />
+            <span className="brand-divider" aria-hidden="true" />
+            <span className="brand-service"><strong>Rehabilitación</strong><small>Guaranda · prototipo académico</small></span>
+          </div>
           <button type="button" className="menu-toggle" aria-expanded={menuAbierto} aria-controls="nav-principal" onClick={() => setMenuAbierto(!menuAbierto)}>
             {menuAbierto ? "Cerrar" : "Menú"}
           </button>
