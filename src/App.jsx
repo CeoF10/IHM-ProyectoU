@@ -7,34 +7,297 @@ import { borradorVacio, crearCitasDemo, generarCodigo, obtenerHorariosDisponible
 
 const preferenciasIniciales = { textoGrande: false, altoContraste: false, botonesGrandes: false };
 
-function Preferencias({ valor, onChange }) {
-  const [mensajeVoz, setMensajeVoz] = useState("");
+function Preferencias({ valor, onChange, seccion }) {
+  const [estadoVoz, setEstadoVoz] = useState({ activo: false, pausado: false, texto: "", fraseActual: "" });
+  const [velocidad, setVelocidad] = useState(1.0);
+  const synthRef = useRef({ cancelado: false, timer: null });
+
   const alternar = (clave) => onChange({ ...valor, [clave]: !valor[clave] });
-  const leerContenido = () => {
-    const texto = document.querySelector("main")?.innerText || "No hay contenido disponible.";
-    try {
-      speechSynthesis.cancel();
-      const lectura = new SpeechSynthesisUtterance(texto);
-      lectura.lang = "es-EC";
-      speechSynthesis.speak(lectura);
-      setMensajeVoz("Lectura iniciada. Puedes detenerla con el botón Detener lectura.");
-    } catch {
-      setMensajeVoz("La lectura por voz no está disponible en este navegador.");
+
+  const restablecer = () => {
+    detenerLectura();
+    onChange(preferenciasIniciales);
+  };
+
+  const obtenerTextoParaLeer = () => {
+    const mainEl = document.querySelector("main");
+    if (!mainEl) return "No hay contenido disponible para leer.";
+
+    const elementos = mainEl.querySelectorAll("h1, h2, h3, p:not(.sr-only), li");
+    const textos = [];
+    elementos.forEach((el) => {
+      if (el.offsetParent === null || el.classList.contains("sr-only")) return;
+      const t = el.innerText.trim();
+      if (t && !textos.includes(t)) textos.push(t);
+    });
+
+    if (textos.length === 0) return mainEl.innerText.trim();
+    return textos.join(". ");
+  };
+
+  const detenerLectura = () => {
+    synthRef.current.cancelado = true;
+    if (synthRef.current.timer) clearInterval(synthRef.current.timer);
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    setEstadoVoz({ activo: false, pausado: false, texto: "Lectura detenida.", fraseActual: "" });
+  };
+
+  const pausarLectura = () => {
+    if (!("speechSynthesis" in window)) return;
+    if (estadoVoz.pausado) {
+      window.speechSynthesis.resume();
+      setEstadoVoz((prev) => ({ ...prev, pausado: false }));
+    } else {
+      window.speechSynthesis.pause();
+      setEstadoVoz((prev) => ({ ...prev, pausado: true }));
     }
   };
+
+  const iniciarLectura = () => {
+    if (!("speechSynthesis" in window)) {
+      setEstadoVoz({ activo: false, pausado: false, texto: "La lectura por voz no está disponible en este navegador.", fraseActual: "" });
+      return;
+    }
+
+    detenerLectura();
+    synthRef.current.cancelado = false;
+    window.speechSynthesis.resume();
+
+    const textoCompleto = obtenerTextoParaLeer();
+    const oraciones = textoCompleto
+      .replace(/\s+/g, " ")
+      .split(/(?<=[.?!;])\s+/)
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0 && !s.startsWith("http"));
+
+    if (oraciones.length === 0) {
+      setEstadoVoz({ activo: false, pausado: false, texto: "No se encontró texto legible en esta pantalla.", fraseActual: "" });
+      return;
+    }
+
+    const voices = window.speechSynthesis.getVoices();
+    const vozEsp = voices.find((v) => v.lang && v.lang.startsWith("es")) || null;
+
+    let index = 0;
+
+    const hablarSiguiente = () => {
+      if (synthRef.current.cancelado) return;
+      if (index >= oraciones.length) {
+        setEstadoVoz({ activo: false, pausado: false, texto: "Lectura finalizada.", fraseActual: "" });
+        return;
+      }
+
+      const frase = oraciones[index];
+      const u = new SpeechSynthesisUtterance(frase);
+      if (vozEsp) u.voice = vozEsp;
+      u.lang = vozEsp ? vozEsp.lang : "es-ES";
+      u.rate = velocidad;
+      u.pitch = 1.0;
+
+      u.onstart = () => {
+        if (!synthRef.current.cancelado) {
+          setEstadoVoz({
+            activo: true,
+            pausado: false,
+            texto: `Leyendo ${index + 1} de ${oraciones.length}:`,
+            fraseActual: frase,
+          });
+        }
+      };
+
+      u.onend = () => {
+        if (!synthRef.current.cancelado) {
+          index++;
+          hablarSiguiente();
+        }
+      };
+
+      u.onerror = (e) => {
+        if (e.error !== "canceled" && e.error !== "interrupted") {
+          console.warn("Speech synthesis error", e);
+        }
+        if (!synthRef.current.cancelado) {
+          index++;
+          hablarSiguiente();
+        }
+      };
+
+      window.speechSynthesis.resume();
+      window.speechSynthesis.speak(u);
+    };
+
+    hablarSiguiente();
+
+    // Mantener activo speechSynthesis en Chromium para evitar corte tras 15 segundos
+    synthRef.current.timer = setInterval(() => {
+      if ("speechSynthesis" in window && window.speechSynthesis.speaking) {
+        window.speechSynthesis.pause();
+        window.speechSynthesis.resume();
+      }
+    }, 10000);
+  };
+
+  useEffect(() => {
+    return () => {
+      detenerLectura();
+    };
+  }, [seccion]);
+
   return (
-    <details className="preferencias">
-      <summary>Accesibilidad</summary>
-      <div className="preferencias-panel" aria-label="Preferencias de accesibilidad">
-        <p>Ajusta toda la interfaz según tus necesidades.</p>
-        <div className="preferencias-controles">
-        <button type="button" aria-pressed={valor.textoGrande} onClick={() => alternar("textoGrande")}>A+ Texto grande</button>
-        <button type="button" aria-pressed={valor.altoContraste} onClick={() => alternar("altoContraste")}>◐ Alto contraste</button>
-        <button type="button" aria-pressed={valor.botonesGrandes} onClick={() => alternar("botonesGrandes")}>▣ Botones grandes</button>
-        <button type="button" onClick={leerContenido}>Escuchar página</button>
-        <button type="button" onClick={() => { window.speechSynthesis?.cancel(); setMensajeVoz("Lectura detenida."); }}>Detener lectura</button>
+    <details className="preferencias" id="menu-accesibilidad">
+      <summary className="preferencias-summary">
+        <span className="pref-badge-icon" aria-hidden="true">♿</span>
+        <span>Accesibilidad</span>
+      </summary>
+
+      <div className="preferencias-panel" aria-label="Ajustes de accesibilidad">
+        <div className="pref-header">
+          <div className="pref-header-title">
+            <span className="pref-header-icon" aria-hidden="true">⚙️</span>
+            <div>
+              <h3>Ajustes de Accesibilidad</h3>
+              <p>Diseño universal para baja visión, adultos mayores y motricidad.</p>
+            </div>
+          </div>
         </div>
-        <p role="status">{mensajeVoz}</p>
+
+        <div className="pref-cards-grid">
+          {/* Tarjeta 1: Texto Grande */}
+          <div className={`pref-card ${valor.textoGrande ? "pref-card-active" : ""}`}>
+            <div className="pref-card-info">
+              <span className="pref-card-icon" aria-hidden="true">🔤</span>
+              <div>
+                <strong>Texto Grande</strong>
+                <small>Aumenta títulos y contenidos para lectura sin esfuerzo.</small>
+              </div>
+            </div>
+            <button
+              type="button"
+              className={`pref-toggle-btn ${valor.textoGrande ? "is-active" : ""}`}
+              aria-pressed={valor.textoGrande}
+              onClick={() => alternar("textoGrande")}
+            >
+              {valor.textoGrande ? "Activado ✓" : "Activar"}
+            </button>
+          </div>
+
+          {/* Tarjeta 2: Alto Contraste */}
+          <div className={`pref-card ${valor.altoContraste ? "pref-card-active" : ""}`}>
+            <div className="pref-card-info">
+              <span className="pref-card-icon" aria-hidden="true">◐</span>
+              <div>
+                <strong>Alto Contraste</strong>
+                <small>Fondo negro profundo y tipografía de máxima visibilidad.</small>
+              </div>
+            </div>
+            <button
+              type="button"
+              className={`pref-toggle-btn ${valor.altoContraste ? "is-active" : ""}`}
+              aria-pressed={valor.altoContraste}
+              onClick={() => alternar("altoContraste")}
+            >
+              {valor.altoContraste ? "Activado ✓" : "Activar"}
+            </button>
+          </div>
+
+          {/* Tarjeta 3: Botones Grandes */}
+          <div className={`pref-card ${valor.botonesGrandes ? "pref-card-active" : ""}`}>
+            <div className="pref-card-info">
+              <span className="pref-card-icon" aria-hidden="true">▣</span>
+              <div>
+                <strong>Botones Grandes</strong>
+                <small>Zonas táctiles amplias (+58px) para facilitar el toque o clic.</small>
+              </div>
+            </div>
+            <button
+              type="button"
+              className={`pref-toggle-btn ${valor.botonesGrandes ? "is-active" : ""}`}
+              aria-pressed={valor.botonesGrandes}
+              onClick={() => alternar("botonesGrandes")}
+            >
+              {valor.botonesGrandes ? "Activado ✓" : "Activar"}
+            </button>
+          </div>
+        </div>
+
+        {/* Lector de Pantalla / Voz */}
+        <div className="pref-audio-box">
+          <div className="pref-audio-header">
+            <span className="pref-audio-icon" aria-hidden="true">🔊</span>
+            <div>
+              <strong>Lector de pantalla asistido</strong>
+              <small>Escucha la información de esta pantalla en voz alta.</small>
+            </div>
+          </div>
+
+          {/* Velocidad de locución */}
+          <div className="pref-speed-selector">
+            <span>Velocidad:</span>
+            {[0.8, 1.0, 1.25].map((vel) => (
+              <button
+                key={vel}
+                type="button"
+                className={`pref-speed-chip ${velocidad === vel ? "is-selected" : ""}`}
+                onClick={() => setVelocidad(vel)}
+              >
+                {vel === 0.8 ? "0.8x Lenta" : vel === 1.0 ? "1.0x Normal" : "1.25x Rápida"}
+              </button>
+            ))}
+          </div>
+
+          {/* Controles de reproducción */}
+          <div className="pref-audio-controls">
+            {!estadoVoz.activo ? (
+              <button
+                type="button"
+                className="btn-audio-primary"
+                onClick={iniciarLectura}
+              >
+                ▶ Escuchar esta página
+              </button>
+            ) : (
+              <div className="pref-audio-action-row">
+                <button
+                  type="button"
+                  className="btn-audio-pause"
+                  onClick={pausarLectura}
+                >
+                  {estadoVoz.pausado ? "▶ Reanudar" : "⏸ Pausar"}
+                </button>
+                <button
+                  type="button"
+                  className="btn-audio-stop"
+                  onClick={detenerLectura}
+                >
+                  ⏹ Detener
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Estado de lectura en vivo */}
+          {estadoVoz.texto && (
+            <div className={`pref-voice-status ${estadoVoz.activo ? "is-playing" : ""}`} role="status">
+              <span className="voice-dot" aria-hidden="true"></span>
+              <div className="voice-status-text">
+                <strong>{estadoVoz.texto}</strong>
+                {estadoVoz.fraseActual && <p>"{estadoVoz.fraseActual}"</p>}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="pref-footer">
+          <button
+            type="button"
+            className="btn-reset-pref"
+            onClick={restablecer}
+          >
+            ↺ Restablecer valores predeterminados
+          </button>
+        </div>
       </div>
     </details>
   );
@@ -296,7 +559,7 @@ export default function App() {
         </div>
       </header>
 
-      <div className="utility-shell"><span className="prototype-label">Prototipo académico · Datos simulados</span><Preferencias valor={preferencias} onChange={setPreferencias} /></div>
+      <div className="utility-shell"><span className="prototype-label">Prototipo académico · Datos simulados</span><Preferencias valor={preferencias} onChange={setPreferencias} seccion={seccion} /></div>
 
       <main id="main">
         {seccion === "inicio" ? <Home titleRef={tituloRef} onNavigate={navegar} onLoadDemo={cargarCitasDemo} hasDemo={citas.some((cita) => cita.esDemo)} onStart={(esp) => {
