@@ -8,7 +8,7 @@ La solicitud de cita usa **un solo recorrido de tres pasos** para todas las pers
 
 ## Funciones
 
-1. Registro de demostración.
+1. Registro local de nombre y correo para esta sesión.
 2. Solicitud y confirmación de citas.
 3. Consulta de profesionales.
 4. Disponibilidad por día y profesional.
@@ -17,7 +17,7 @@ La solicitud de cita usa **un solo recorrido de tres pasos** para todas las pers
 7. Recordatorios de próximas citas.
 8. Información del centro.
 
-Todas usan datos simulados. Los horarios no permiten reservar una hora pasada ni una ocupada en la sesión.
+Las citas y los horarios usan datos simulados; la dirección, el teléfono y la foto del hospital proceden del IESS. Los horarios no permiten reservar una hora pasada ni una ocupada en la sesión.
 
 ## Ejecutar
 
@@ -36,16 +36,20 @@ npm run lint
 npm run build
 ```
 
-Desde Inicio se pueden cargar dos citas ficticias para mostrar historial, recordatorios, reprogramación y cancelación. Usa nombres inventados en las pruebas. Las citas se guardan solo en `sessionStorage` y las preferencias de accesibilidad en `localStorage`; los cuatro dígitos solicitados en el formulario no se guardan.
+Desde «Mis citas» → «Datos y privacidad» se pueden cargar dos citas ficticias para mostrar historial, recordatorios, reprogramación y cancelación. Usa nombres inventados en las pruebas. Las citas y los datos de registro se guardan solo en `sessionStorage` y las preferencias de accesibilidad en `localStorage`; los diez dígitos de la cédula solicitados en el formulario no se guardan.
 
 ## Organización
 
 - `src/App.jsx`: navegación, preferencias y estado de citas.
 - `src/components/`: inicio, solicitud guiada y secciones informativas.
 - `src/utils/appointments.js`: reglas de disponibilidad, recordatorios y datos de demostración.
-- `src/data/mock.js`: profesionales, ejercicios y centro ficticios.
-- `public/ejercicios/`: video, subtítulos y recurso visual.
+- `src/data/mock.js`: profesionales y horarios ficticios; datos de contacto verificados del hospital.
+- `public/ejercicios/`: videos, subtítulos y miniaturas extraídas de esos videos.
+- `public/profesionales/`: retratos ilustrativos generados para las fichas ficticias.
+- `public/centro/`: fotografía institucional del Hospital de Guaranda.
 - `docs/`: charter, mapa de navegación, análisis IHM y protocolo de evaluación.
 - `diagramas/` y `entregas-docente/`: material de las entregas académicas.
 
 La [evaluación con participantes y lector de pantalla](docs/04-protocolo-evaluacion.md) sigue pendiente. Las pruebas técnicas no sustituyen esa evaluación.
+
+La dirección y el teléfono del centro proceden del [directorio de unidades médicas del IESS](https://www.iess.gob.ec/es/mapa-de-unidades-medicas). La fotografía de la fachada procede del [Plan Médico Funcional del Hospital de Guaranda](https://www.iess.gob.ec/documents/10162/3321619/PMF+HOSPITAL+GUARANDA.pdf), publicado por el IESS. Las fichas de profesionales y sus retratos son referenciales, no identifican a personal real.

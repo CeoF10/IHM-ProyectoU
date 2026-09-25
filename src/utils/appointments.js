@@ -61,7 +61,7 @@ export function obtenerHorariosDisponibles(especialistaNombre, fecha, citas = []
 }
 
 export function validarIdentificador(valor) {
-  return /^\d{4}$/.test(valor);
+  return /^\d{10}$/.test(valor);
 }
 
 export function obtenerProximasCitas(citas, ahora = new Date()) {

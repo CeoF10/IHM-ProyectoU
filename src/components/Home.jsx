@@ -26,64 +26,53 @@ function MovementIllustration() {
       <circle cx="211" cy="125" r="5" fill="var(--primary-mid)" />
       <path d="M65 223h132" stroke="var(--primary)" strokeWidth="3" strokeLinecap="round" opacity=".35" />
     </svg>
-    <figcaption>Movimiento, a tu ritmo</figcaption>
   </figure>;
 }
 
 const groups = [
-  { title: "Organiza tu atención", description: "Encuentra lo necesario antes de tu visita.", items: [
-    ["especialistas", "people", "Profesionales", "Conoce sus especialidades y horarios."],
-    ["calendario", "calendar", "Disponibilidad", "Consulta los cupos de los próximos días."],
-    ["centros", "place", "Centro de atención", "Ubicación, contacto y cómo llegar."],
+  { title: "Antes de tu cita", items: [
+    ["especialistas", "people", "Profesionales"],
+    ["calendario", "calendar", "Horarios"],
+    ["centros", "place", "Centro de atención"],
   ] },
-  { title: "Orientación para ti", description: "Consulta información y continúa tu recorrido.", items: [
-    ["ejercicios", "exercise", "Ejercicios", "Videos con subtítulos y guías escritas."],
-    ["recordatorios", "reminder", "Recordatorios", "Ten presentes tus próximas citas."],
-    ["registro", "register", "Registro de usuario", "Completa tus datos en la demostración."],
+  { title: "Para continuar", items: [
+    ["ejercicios", "exercise", "Ejercicios"],
+    ["recordatorios", "reminder", "Recordatorios"],
+    ["registro", "register", "Mis datos"],
   ] },
 ];
 
-export default function Home({ onNavigate, onStart, titleRef, onLoadDemo, hasDemo }) {
+export default function Home({ onNavigate, onStart, titleRef }) {
   const [especialidad, setEspecialidad] = useState("");
   return <div className="home">
     <section className="home-intro" aria-labelledby="home-title">
       <div className="home-copy">
-        <p className="location-label">Servicio de rehabilitación en Guaranda</p>
-        <h1 id="home-title" ref={titleRef} tabIndex={-1}>Organiza tu atención de rehabilitación.</h1>
-        <p className="home-description">Encuentra un profesional, elige un horario disponible y consulta las orientaciones para tu atención.</p>
-        <div className="home-process" aria-label="Pasos para solicitar una cita"><span>Elige la atención</span><span aria-hidden="true">›</span><span>Busca un horario</span><span aria-hidden="true">›</span><span>Confirma</span></div>
-        <p className="home-access-note">Puedes ampliar el texto o elegir una solicitud guiada en cualquier momento.</p>
+        <p className="location-label">Rehabilitación en Guaranda</p>
+        <h1 id="home-title" ref={titleRef} tabIndex={-1}>Tu cita de rehabilitación.</h1>
+        <p className="home-description">Elige un profesional y un horario. Confirma al final.</p>
       </div>
       <MovementIllustration />
       <form className="booking-start" onSubmit={(event) => { event.preventDefault(); onStart(especialidad); }}>
         <span className="booking-symbol"><ServiceIcon type="calendar" /></span>
-        <h2>Solicita tu cita</h2>
-        <p>Comienza por la atención que necesitas.</p>
-        <label htmlFor="home-specialty">Especialidad</label>
+        <h2>Solicitar cita</h2>
+        <label htmlFor="home-specialty">Especialidad <span className="optional">(opcional)</span></label>
         <select id="home-specialty" value={especialidad} onChange={(event) => setEspecialidad(event.target.value)}>
           <option value="">Elegir durante la solicitud</option>
           {[...new Set(especialistas.map(item => item.especialidad))].map(item => <option key={item}>{item}</option>)}
         </select>
-        <button className="booking-action" type="submit">Comenzar solicitud</button>
-        <p className="booking-hint">Revisarás todos los datos antes de confirmar.</p>
+        <button className="booking-action" type="submit">Empezar solicitud</button>
       </form>
     </section>
     <section className="returning-patient" aria-labelledby="returning-title">
       <div className="returning-icon"><ServiceIcon type="calendar" /></div>
-      <div><h2 id="returning-title">¿Ya tienes una cita?</h2><p>Consulta la fecha, reprograma o cancela tu solicitud.</p></div>
+      <div><h2 id="returning-title">¿Ya tienes una cita?</h2></div>
       <button className="btn-secondary" onClick={() => onNavigate("historial")}>Ver mis citas</button>
     </section>
-    <aside className="demo-data-prompt" aria-labelledby="demo-data-title">
-      <div><p className="eyebrow">Prototipo académico · sin backend</p><h2 id="demo-data-title">Explora el recorrido con citas ficticias</h2>
-        <p>Agrega dos citas de ejemplo para revisar el historial, los recordatorios, la reprogramación y la cancelación. No necesitas ingresar datos personales.</p></div>
-      <button type="button" className="btn-primary" onClick={onLoadDemo}>{hasDemo ? "Ver citas de ejemplo" : "Cargar citas de ejemplo"}</button>
-    </aside>
     <div className="service-groups">{groups.map(group => <section key={group.title} className="service-group">
-      <h2>{group.title}</h2><p>{group.description}</p>
-      <div className="service-links">{group.items.map(([target, icon, title, detail]) => <button className="service-link" key={target} onClick={() => onNavigate(target)}>
-        <span className="service-icon"><ServiceIcon type={icon}/></span><span><strong>{title}</strong><small>{detail}</small></span><span className="service-chevron" aria-hidden="true">›</span>
+      <h2>{group.title}</h2>
+      <div className="service-links">{group.items.map(([target, icon, title]) => <button className="service-link" key={target} onClick={() => onNavigate(target)}>
+        <span className="service-icon"><ServiceIcon type={icon}/></span><span><strong>{title}</strong></span><span className="service-chevron" aria-hidden="true">›</span>
       </button>)}</div>
     </section>)}</div>
-    <aside className="home-help"><span aria-hidden="true">Aa</span><div><h2>Una solicitud clara y accesible</h2><p>El formulario te guía en tres pasos, permite volver para corregir y funciona con teclado. Ajusta el tamaño del texto, el contraste y los botones desde Accesibilidad.</p></div></aside>
   </div>;
 }

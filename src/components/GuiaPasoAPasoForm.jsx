@@ -10,6 +10,7 @@ export default function GuiaPasoAPasoForm({ form, setForm, citas, editandoId, on
   const errorRef = useRef(null);
   const fechaMinima = fechaLocal();
   const horarios = obtenerHorariosDisponibles(form.especialista, form.fecha, citas, editandoId);
+  const titulosPaso = ["Tus datos", "Elige un profesional", "Elige fecha y hora"];
 
   useEffect(() => {
     tituloRef.current?.focus();
@@ -34,7 +35,7 @@ export default function GuiaPasoAPasoForm({ form, setForm, citas, editandoId, on
     setError("");
     if (paso === 1) {
       if (form.nombre.trim().length < 3) return mostrarError("nombre", "Escriba su nombre completo. Ejemplo: Rosa García.");
-      if (!validarIdentificador(form.identificador)) return mostrarError("identificador", "Escriba solamente los últimos 4 números de su cédula. Ejemplo: 4567.");
+      if (!validarIdentificador(form.identificador)) return mostrarError("identificador", "Escribe los 10 dígitos de tu cédula, sin espacios ni guiones.");
       return setPaso(2);
     }
     if (paso === 2) {
@@ -55,7 +56,7 @@ export default function GuiaPasoAPasoForm({ form, setForm, citas, editandoId, on
 
   return (
     <section className="card guiada" aria-label="Solicitud de cita con guía paso a paso">
-      <div className="form-header"><div><p className="eyebrow">Nueva cita</p><h2 ref={tituloRef} tabIndex={-1}>Solicitud de cita</h2><p className="muted grande">Un paso a la vez. Puedes regresar sin perder tus datos.</p></div><span className="privacy-badge">Paso {paso} de 3</span></div>
+      <div className="form-header"><h2 ref={tituloRef} tabIndex={-1}>{titulosPaso[paso - 1]}</h2></div>
       <ol className="pasos" aria-label={`Paso ${paso} de 3`}>
         <li aria-current={paso === 1 ? "step" : undefined} className={paso >= 1 ? "on" : ""}>1. Datos</li>
         <li aria-current={paso === 2 ? "step" : undefined} className={paso >= 2 ? "on" : ""}>2. Profesional</li>
@@ -67,15 +68,15 @@ export default function GuiaPasoAPasoForm({ form, setForm, citas, editandoId, on
       {paso === 1 && <div>
         <label htmlFor="guia-nombre">Nombre completo *</label>
         <input id="guia-nombre" className="big" value={form.nombre} onChange={(ev) => actualizar("nombre", ev.target.value)} placeholder="Ejemplo: Rosa García" autoComplete="name" aria-invalid={campoError === "nombre"} aria-describedby={campoError === "nombre" ? "solicitud-error" : undefined} />
-        <label htmlFor="guia-identificador">Últimos 4 números de la cédula *</label>
-        <input id="guia-identificador" className="big" value={form.identificador} onChange={(ev) => actualizar("identificador", ev.target.value)} inputMode="numeric" maxLength="4" autoComplete="off" placeholder="Ejemplo: 4567" aria-invalid={campoError === "identificador"} aria-describedby={campoError === "identificador" ? "solicitud-error guia-identificador-ayuda" : "guia-identificador-ayuda"} />
-        <p id="guia-identificador-ayuda" className="field-help grande">No guardaremos estos cuatro números.</p>
+        <label htmlFor="guia-identificador">Número de cédula *</label>
+        <input id="guia-identificador" className="big" value={form.identificador} onChange={(ev) => actualizar("identificador", ev.target.value.replace(/\D/g, ""))} inputMode="numeric" maxLength="10" autoComplete="off" placeholder="10 dígitos" aria-invalid={campoError === "identificador"} aria-describedby={campoError === "identificador" ? "solicitud-error guia-identificador-ayuda" : "guia-identificador-ayuda"} />
+        <p id="guia-identificador-ayuda" className="field-help">Tu cédula no se guarda al confirmar la cita.</p>
       </div>}
 
       {paso === 2 && <ul className="docs">
         {especialistas.map((item) => <li key={item.id} className={form.especialista === item.nombre ? "doc sel" : "doc"}>
-          <span className="avatar" aria-hidden="true">{item.foto}</span>
-          <span><strong>{item.nombre}</strong><br />{item.especialidad}<br />{item.horario}</span>
+          <span className={`professional-portrait portrait-${item.id}`} aria-hidden="true" />
+          <span><strong>{item.nombre}</strong><br />{item.especialidad}<br /><small>{item.horario}</small></span>
           <button type="button" className="btn-big" onClick={() => actualizar("especialista", item.nombre, { esp: item.especialidad, fecha: "", hora: "" })} aria-pressed={form.especialista === item.nombre} aria-label={`${form.especialista === item.nombre ? "Seleccionado" : "Seleccionar"}: ${item.nombre}, ${item.especialidad}`} aria-describedby={campoError === "especialista" ? "solicitud-error" : undefined}>
             {form.especialista === item.nombre ? "Seleccionado" : "Seleccionar"}
           </button>
@@ -93,8 +94,8 @@ export default function GuiaPasoAPasoForm({ form, setForm, citas, editandoId, on
       </div>}
 
       <div className="nav-pasos">
-        {paso > 1 && <button type="button" className="btn-sec-big" onClick={volver}>← Atrás</button>}
-        <button type="button" className="btn-big" onClick={siguiente}>{paso === 3 ? "Revisar cita →" : "Siguiente →"}</button>
+        {paso > 1 && <button type="button" className="btn-sec-big" onClick={volver}>Atrás</button>}
+        <button type="button" className="btn-big" onClick={siguiente}>{paso === 3 ? "Revisar cita" : "Siguiente"}</button>
       </div>
     </section>
   );

@@ -36,4 +36,4 @@ El recorrido mantiene una sola tarea por paso, permite regresar sin perder los d
 
 ## Persistencia simulada
 
-Las citas y los cambios de estado se conservan en `sessionStorage` mientras la pestaña permanezca abierta. El identificador personal no se almacena. El registro solamente valida y muestra una confirmación local; no crea cuentas reales.
+Las citas, el registro local de nombre/correo y los cambios de estado se conservan en `sessionStorage` mientras la pestaña permanezca abierta. El número de cédula no se almacena. El registro sirve para completar el nombre en solicitudes posteriores de la misma sesión; no crea cuentas reales.

@@ -1,8 +1,8 @@
 export const especialistas = [
-  { id: 1, nombre: "Dra. María Toaza", especialidad: "Fisioterapia", horario: "Lun-Vie 08:00-11:30", dias: [1, 2, 3, 4, 5], horas: ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30"], foto: "MT" },
-  { id: 2, nombre: "Dr. Carlos Bayas", especialidad: "Traumatología", horario: "Lun-Mié-Vie 14:00-15:00", dias: [1, 3, 5], horas: ["14:00", "14:30", "15:00"], foto: "CB" },
-  { id: 3, nombre: "Lcda. Ana Chimbo", especialidad: "Terapia Ocupacional", horario: "Mar-Jue 08:00-11:30", dias: [2, 4], horas: ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30"], foto: "AC" },
-  { id: 4, nombre: "Dr. Luis Montero", especialidad: "Neurología", horario: "Lun-Jue 09:00-15:00", dias: [1, 2, 3, 4], horas: ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "14:00", "14:30", "15:00"], foto: "LM" },
+  { id: 1, nombre: "Dra. María Toaza", especialidad: "Fisioterapia", enfoque: "Movilidad y recuperación funcional", horario: "Lun–vie · 08:00 a 11:30", dias: [1, 2, 3, 4, 5], horas: ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30"] },
+  { id: 2, nombre: "Dr. Carlos Bayas", especialidad: "Traumatología", enfoque: "Articulaciones y lesiones musculoesqueléticas", horario: "Lun, mié y vie · 14:00 a 15:00", dias: [1, 3, 5], horas: ["14:00", "14:30", "15:00"] },
+  { id: 3, nombre: "Lcda. Ana Chimbo", especialidad: "Terapia Ocupacional", enfoque: "Autonomía en las actividades cotidianas", horario: "Mar y jue · 08:00 a 11:30", dias: [2, 4], horas: ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30"] },
+  { id: 4, nombre: "Dr. Luis Montero", especialidad: "Neurología", enfoque: "Valoración de funciones neurológicas", horario: "Lun–jue · 09:00 a 15:00", dias: [1, 2, 3, 4], horas: ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "14:00", "14:30", "15:00"] },
 ];
 
 export const horariosDisponibles = [
@@ -19,6 +19,7 @@ export const ejercicios = [
     nivel: "Básico - Recuperación",
     duracion: "3:13 min",
     video: "/ejercicios/movilidad-hombro.mp4",
+    poster: "/ejercicios/movilidad-hombro.jpg",
     vtt: "/ejercicios/movilidad-hombro.vtt",
     desc: "Rutina de 3 estiramientos para recuperar amplitud de movimiento articular y aliviar sobrecargas.",
     pasos: [
@@ -36,6 +37,7 @@ export const ejercicios = [
     nivel: "Inicial - Fase temprana",
     duracion: "2:24 min",
     video: "/ejercicios/fortalecimiento-rodilla.mp4",
+    poster: "/ejercicios/fortalecimiento-rodilla.jpg",
     vtt: "/ejercicios/fortalecimiento-rodilla.vtt",
     desc: "Activación isométrica y propioceptiva para rodilla post-inmovilización o debilidad muscular.",
     pasos: [
@@ -54,6 +56,7 @@ export const ejercicios = [
     nivel: "Todos los niveles",
     duracion: "3:54 min",
     video: "/ejercicios/respiracion-diafragmatica.mp4",
+    poster: "/ejercicios/respiracion-diafragmatica.jpg",
     vtt: "/ejercicios/respiracion-diafragmatica.vtt",
     desc: "Guía práctica para activar el diafragma, mejorar la oxigenación y relajar la caja torácica.",
     pasos: [
@@ -67,8 +70,11 @@ export const ejercicios = [
 ];
 
 export const centroInfo = {
-  nombre: "IESS Centro de Rehabilitación Guaranda",
-  direccion: "Av. Manuela Cañizares y 7 de Mayo, Guaranda, Bolívar",
-  telefono: "(03) 255-0123",
-  horario: "Lunes a Viernes 08:00 - 17:00",
+  nombre: "Hospital Básico Guaranda",
+  subtitulo: "Dr. Humberto del Pozo Saltos",
+  direccion: "Augusto Chávez S/N, vía a Ambato, Guaranda, Bolívar",
+  telefono: "03 298 2019",
+  foto: "/centro/hospital-basico-guaranda.jpg",
+  fuente: "https://www.iess.gob.ec/es/mapa-de-unidades-medicas",
+  fuenteFoto: "https://www.iess.gob.ec/documents/10162/3321619/PMF+HOSPITAL+GUARANDA.pdf",
 };

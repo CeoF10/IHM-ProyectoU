@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { especialistas, ejercicios, centroInfo } from "../data/mock";
 import { fechaLocal, obtenerHorariosDisponibles, obtenerProximasCitas } from "../utils/appointments";
+import Icon from "./Icon";
 
 function Recordatorios({ citas }) {
   const [ahora, setAhora] = useState(() => new Date());
@@ -11,7 +12,6 @@ function Recordatorios({ citas }) {
   const proximas = obtenerProximasCitas(citas, ahora);
   return <section className="card" aria-labelledby="recordatorios-titulo">
     <h2 id="recordatorios-titulo">Tus próximos recordatorios</h2>
-    <p className="muted">Se actualizan con las citas pendientes de esta sesión.</p>
     {proximas.length === 0 ? <p role="status">No tienes citas pendientes por venir. Al confirmar una cita, aparecerá aquí.</p> :
       <ul className="reminder-list">{proximas.map((cita) => <li key={cita.id} className="alert">
         <h3>{cita.esp}</h3>
@@ -23,8 +23,8 @@ function Recordatorios({ citas }) {
   </section>;
 }
 
-function RegistroForm() {
-  const [datos, setDatos] = useState({ nombre: "", correo: "" });
+function RegistroForm({ perfil, onSaveProfile }) {
+  const [datos, setDatos] = useState(perfil || { nombre: "", correo: "" });
   const [errores, setErrores] = useState({});
   const [mensaje, setMensaje] = useState("");
 
@@ -44,8 +44,8 @@ function RegistroForm() {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(datos.correo)) nuevos.correo = "Escribe un correo válido. Ejemplo: nombre@correo.com";
     setErrores(nuevos);
     if (Object.keys(nuevos).length === 0) {
-      setMensaje(`Registro de demostración completado para ${datos.nombre}. No se enviaron datos.`);
-      setDatos({ nombre: "", correo: "" });
+      onSaveProfile({ nombre: datos.nombre.trim(), correo: datos.correo.trim() });
+      setMensaje("Tus datos se guardaron para esta sesión. Tu nombre aparecerá al solicitar una cita.");
     } else {
       setMensaje("");
     }
@@ -61,7 +61,7 @@ function RegistroForm() {
     <input id="registro-correo" value={datos.correo} onChange={(ev) => actualizar("correo", ev.target.value)} type="email" placeholder="correo@ejemplo.com" autoComplete="email" aria-invalid={!!errores.correo} aria-describedby={errores.correo ? "registro-correo-error" : undefined} />
     {errores.correo && <p id="registro-correo-error" className="err">{errores.correo}</p>}
 
-    <button className="btn-primary" type="submit">Completar demostración</button>
+    <button className="btn-primary" type="submit">Guardar mis datos</button>
     {mensaje && <p className="okmsg" role="status">{mensaje}</p>}
   </form>;
 }
@@ -76,12 +76,11 @@ function proximosDiasLaborables(cantidad = 5) {
   return dias;
 }
 
-export default function InfoPanels({ seccion, citas, onChangeStatus, onReschedule, onClearData, onLoadDemo }) {
-  if (seccion === "especialistas") return <Especialistas />;
+export default function InfoPanels({ seccion, citas, perfil, onSaveProfile, onChangeStatus, onReschedule, onClearData, onLoadDemo, onNavigate, onChooseSpecialist }) {
+  if (seccion === "especialistas") return <Especialistas onChooseSpecialist={onChooseSpecialist} />;
 
   if (seccion === "calendario") return <section className="card" aria-labelledby="calendario-titulo">
     <h2 id="calendario-titulo">Disponibilidad de los próximos días</h2>
-    <p className="muted">Los cupos se calculan con los horarios de cada profesional y las citas no canceladas.</p>
     <div className="table-scroll" tabIndex="0" aria-label="Tabla desplazable de disponibilidad">
       <table className="calendar-table">
         <caption className="sr-only">Cantidad de horarios disponibles por profesional y día</caption>
@@ -101,11 +100,10 @@ export default function InfoPanels({ seccion, citas, onChangeStatus, onReschedul
   </section>;
 
   if (seccion === "historial") return <section className="card" aria-labelledby="historial-titulo">
-    <h2 id="historial-titulo">Mis citas de demostración</h2>
-    <p className="privacy-note">Solo permanecen durante esta sesión del navegador. Nunca se conserva el número de cédula y los datos desaparecen al cerrar la pestaña.</p>
-    {citas.length === 0 ? <div className="empty-appointments"><p className="muted">Aún no hay citas. Crea una desde “Solicitar cita” o carga ejemplos ficticios para recorrer las funciones de la demostración.</p><button type="button" className="btn-primary" onClick={onLoadDemo}>Cargar citas de ejemplo</button></div> : <div className="appointment-list">
+    <h2 id="historial-titulo">Mis citas</h2>
+    {citas.length === 0 ? <div className="empty-appointments"><p className="muted">Aún no tienes citas. Elige un profesional y reserva un horario disponible.</p><button type="button" className="btn-primary" onClick={() => onNavigate("cita")}>Solicitar una cita</button></div> : <div className="appointment-list">
       {citas.map((cita) => <article className="appointment-card" key={cita.id}>
-        <div><p className="eyebrow">Código {cita.codigo}</p>{cita.esDemo && <p className="demo-record-label">Dato ficticio para la demostración</p>}<h3>{cita.esp}</h3><p>{cita.especialista}</p></div>
+        <div><p className="eyebrow">Código {cita.codigo}</p>{cita.esDemo && <p className="demo-record-label">Cita de ejemplo</p>}<h3>{cita.esp}</h3><p>{cita.especialista}</p></div>
         <dl><div><dt>Paciente</dt><dd>{cita.nombre}</dd></div><div><dt>Fecha</dt><dd>{cita.fecha} · {cita.hora}</dd></div><div><dt>Estado</dt><dd><span className={`status status-${(cita.estado || "Pendiente").toLowerCase()}`}>{cita.estado || "Pendiente"}</span></dd></div></dl>
         <div className="appointment-actions">
           <button type="button" className="btn-secondary" onClick={() => onReschedule(cita)} disabled={cita.estado !== "Pendiente"}>Reprogramar</button>
@@ -115,13 +113,13 @@ export default function InfoPanels({ seccion, citas, onChangeStatus, onReschedul
         </div>
       </article>)}
     </div>}
-    <div className="danger-zone">
-      <h3>Datos de demostración</h3>
-      <p>Elimina inmediatamente todas las citas de esta sesión.</p>
-      <button type="button" className="btn-danger" disabled={citas.length === 0} onClick={() => {
-        if (window.confirm("¿Eliminar todas las citas de demostración guardadas en este navegador?")) onClearData();
-      }}>Borrar datos locales</button>
-    </div>
+    <details className="session-details"><summary>Datos y privacidad</summary>
+      <p>Las citas y tus datos de registro permanecen en esta pestaña. La cédula no se guarda.</p>
+      <div className="session-actions"><button type="button" className="btn-secondary" onClick={onLoadDemo}>Cargar citas de ejemplo</button>
+      <button type="button" className="btn-danger" disabled={citas.length === 0 && !perfil} onClick={() => {
+        if (window.confirm("¿Eliminar las citas y tus datos guardados en esta pestaña?")) onClearData();
+      }}>Borrar mis datos</button></div>
+    </details>
   </section>;
 
   if (seccion === "ejercicios") return <EjerciciosSection />;
@@ -129,34 +127,38 @@ export default function InfoPanels({ seccion, citas, onChangeStatus, onReschedul
 
   if (seccion === "recordatorios") return <Recordatorios citas={citas} />;
 
-  if (seccion === "centros") return <section className="card" aria-labelledby="centros-titulo">
-    <h2 id="centros-titulo">Información del centro</h2>
-    <p><strong>{centroInfo.nombre}</strong></p><address>{centroInfo.direccion}<br />Teléfono: {centroInfo.telefono}<br />{centroInfo.horario}</address>
-    <p className="prototype-banner">Dirección y contacto usados únicamente como datos simulados para este proyecto académico.</p>
+  if (seccion === "centros") return <section className="card center-page" aria-labelledby="centros-titulo">
+    <div className="center-hero"><img src={centroInfo.foto} alt="Fachada del Hospital del IESS en Guaranda" />
+      <div className="center-hero-copy"><p className="eyebrow">Red de atención IESS · Bolívar</p><h2 id="centros-titulo">{centroInfo.nombre}</h2><p>{centroInfo.subtitulo}</p></div></div>
+    <div className="center-details"><div><h3>Ubicación</h3><address>{centroInfo.direccion}</address><a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(centroInfo.nombre + " " + centroInfo.direccion)}`} target="_blank" rel="noreferrer">Ver cómo llegar ↗</a></div>
+      <div><h3>Contacto</h3><p><a href={`tel:+593${centroInfo.telefono.replace(/\D/g, "").slice(1)}`}>{centroInfo.telefono}</a></p><a href={centroInfo.fuente} target="_blank" rel="noreferrer">Consultar directorio del IESS ↗</a></div>
+      <div><h3>Antes de acudir</h3><p>Ten a mano tu documento de identidad y la indicación médica correspondiente.</p></div></div>
+    <p className="image-credit">Imagen: <a href={centroInfo.fuenteFoto} target="_blank" rel="noreferrer">archivo institucional del IESS</a>.</p>
   </section>;
 
   if (seccion === "registro") return <section className="card" aria-labelledby="registro-titulo">
-    <h2 id="registro-titulo">Registro de demostración</h2>
-    <p className="muted">Valida el formulario localmente, pero no crea una cuenta ni guarda los datos.</p>
-    <RegistroForm />
+    <h2 id="registro-titulo">Mis datos</h2>
+    <p className="muted">Guarda tu nombre para completar más rápido una solicitud.</p>
+    <RegistroForm perfil={perfil} onSaveProfile={onSaveProfile} />
   </section>;
 
   return null;
 }
 
-function Especialistas() {
+function Especialistas({ onChooseSpecialist }) {
   const [consulta, setConsulta] = useState("");
   const filtrados = especialistas.filter((item) => `${item.nombre} ${item.especialidad}`.toLocaleLowerCase("es").includes(consulta.trim().toLocaleLowerCase("es")));
   return <section className="card" aria-labelledby="especialistas-titulo">
     <h2 id="especialistas-titulo">Profesionales disponibles</h2>
-    <p className="muted">Busca por nombre o especialidad para encontrar a quién elegir en tu cita.</p>
+    <p className="section-lead">Encuentra el área de atención que necesitas y continúa con una sola solicitud de cita.</p>
     <label htmlFor="buscar-profesional">Buscar profesional o especialidad</label>
     <input id="buscar-profesional" type="search" value={consulta} onChange={(event) => setConsulta(event.target.value)} placeholder="Ej. fisioterapia" />
     <p className="sr-only" role="status" aria-live="polite">{filtrados.length} profesionales encontrados.</p>
-    {filtrados.length ? <ul className="docs">{filtrados.map((item) => <li key={item.id} className="doc">
-      <span className="avatar" aria-hidden="true">{item.foto}</span>
-      <span><strong>{item.nombre}</strong><br />{item.especialidad}<br />{item.horario}</span>
+    {filtrados.length ? <ul className="professional-grid">{filtrados.map((item) => <li key={item.id} className="professional-card">
+      <span className={`professional-portrait portrait-${item.id}`} aria-hidden="true" />
+      <div className="professional-details"><span className="specialty-pill">{item.especialidad}</span><h3>{item.nombre}</h3><p>{item.enfoque}</p><div className="professional-schedule"><Icon name="calendar" /> <span>{item.horario}</span></div><button className="btn-primary" type="button" onClick={() => onChooseSpecialist(item)}>Solicitar cita</button></div>
     </li>)}</ul> : <p role="status" className="alert info">No encontramos profesionales con ese nombre o especialidad. Prueba con otra palabra.</p>}
+    <p className="image-credit">Profesionales y horarios referenciales para este proyecto académico; retratos ilustrativos.</p>
   </section>;
 }
 
@@ -223,7 +225,7 @@ function EjerciciosSection() {
                 setEjercicioActivoId(ej.id);
               }}
             >
-              {seleccionado ? "▶ " : ""}{ej.titulo}
+              {ej.titulo}
             </button>
           );
         })}
@@ -240,7 +242,7 @@ function EjerciciosSection() {
           key={activo.id}
           controls
           preload="metadata"
-          poster="/ejercicios/movilidad-hombro.svg"
+          poster={activo.poster}
           style={{ width: "100%", maxHeight: "440px", borderRadius: "10px", background: "#000" }}
         >
           <source src={activo.video} type="video/mp4" />
@@ -248,7 +250,7 @@ function EjerciciosSection() {
           Su navegador no puede reproducir el video. Consulte la transcripción disponible debajo.
         </video>
 
-        <details className="transcripcion-box" open>
+        <details className="transcripcion-box">
           <summary>
             <strong>Leer transcripción completa ({activo.titulo})</strong>
           </summary>
@@ -264,7 +266,7 @@ function EjerciciosSection() {
                   style={{ fontSize: "13px", padding: "6px 12px" }}
                   onClick={hablarTranscripcion}
                 >
-                  {leyendoVoz ? "⏹ Detener lectura" : "🔊 Escuchar transcripción"}
+                  <Icon name={leyendoVoz ? "stop" : "volume"} /> {leyendoVoz ? "Detener lectura" : "Escuchar transcripción"}
                 </button>
               )}
             </div>
@@ -286,10 +288,7 @@ function EjerciciosSection() {
         </details>
       </article>
 
-      <h3 style={{ marginTop: "24px", marginBottom: "8px" }}>Catálogo de ejercicios de rehabilitación</h3>
-      <p className="muted" style={{ margin: "0 0 14px" }}>
-        Todos los videos provienen del mismo canal especializado (<strong>FisioOnline</strong>) para garantizar coherencia médica y técnica.
-      </p>
+      <h3 style={{ marginTop: "24px", marginBottom: "8px" }}>Más ejercicios</h3>
       <div className="exercise-grid">
         {ejercicios.map((item) => (
           <article
@@ -298,10 +297,10 @@ function EjerciciosSection() {
             style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}
           >
             <div>
-              <p className="eyebrow" style={{ marginBottom: "4px" }}>{item.canal} &bull; {item.duracion}</p>
+              <img className="exercise-thumb" src={item.poster} alt="" />
+              <p className="eyebrow" style={{ marginBottom: "4px" }}>{item.duracion}</p>
               <h3>{item.titulo}</h3>
-              <p><strong>Nivel:</strong> {item.nivel}</p>
-              <p>{item.desc}</p>
+              <p>{item.nivel}</p>
             </div>
             <button
               type="button"
@@ -313,7 +312,7 @@ function EjerciciosSection() {
                 setEjercicioActivoId(item.id);
               }}
             >
-              {item.id === activo.id ? "▶ Viendo ahora" : "Ver video y transcripción"}
+              {item.id === activo.id ? "Viendo ahora" : "Ver video y transcripción"}
             </button>
           </article>
         ))}
@@ -321,4 +320,3 @@ function EjerciciosSection() {
     </section>
   );
 }
-

@@ -35,7 +35,7 @@ Los usuarios tienen dificultades para conocer servicios disponibles, solicitar u
 - RF5 Historial citas: tarjetas con estado (pendiente, atendida, cancelada) y acciones para reprogramar o cancelar.
 - RF6 Recomendaciones ejercicios: fichas simuladas con referencia multimedia + descripción.
 - RF7 Recordatorios: banners/alertas simuladas.
-- RF8 Info centros: dirección, teléfono y horario simulados.
+- RF8 Info centros: fotografía, dirección y teléfono del hospital tomados de publicaciones oficiales del IESS.
 
 ## 7. Requerimientos no funcionales IHM (los 8 ítems evaluados)
 1. Tamaño botones: objetivos de al menos 44x44px y opción general para ampliar controles.

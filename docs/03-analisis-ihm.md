@@ -18,7 +18,7 @@ Son necesidades de diseño, no categorías que la persona deba declarar. Cualqui
 
 ### 2. Contraste e identidad visual
 - La cabecera adopta el azul `#004394` y el logotipo blanco publicados en [iess.gob.ec](https://www.iess.gob.ec/). El azul profundo `#092766` y el azul medio `#294e9b` aparecen en los estilos del portal; blanco y azul claro mantienen la lectura del prototipo. Los botones, acentos y estados usan esta misma familia de azules.
-- El logotipo identifica la referencia institucional, mientras los rótulos «Prototipo académico» y «No es un sitio oficial» distinguen la demostración del servicio real.
+- El logotipo identifica la referencia institucional, mientras el pie «Proyecto académico» y «No es un sitio oficial» distingue la demostración del servicio real sin interrumpir cada tarea.
 - Texto principal #17223b sobre superficies blancas o gris claro.
 - Alto contraste con superficies negras y texto blanco en el encabezado y ayudas.
 - Foco con contorno blanco de 3px y anillo oscuro de 6px. La conformidad de todos los estados requiere medir sus combinaciones de color.
@@ -33,7 +33,7 @@ Son necesidades de diseño, no categorías que la persona deba declarar. Cualqui
 - Permite volver sin perder la información ya ingresada.
 
 ### 5. Mensajes de error
-- `role=alert`, ejemplo de corrección: "Escribe únicamente los últimos 4 números. Ejemplo: 4567."
+- `role=alert`, ejemplo de corrección: «Escribe los 10 dígitos de tu cédula, sin espacios ni guiones».
 - Mensajes directos con ejemplos de corrección; el foco pasa al mensaje de error.
 - Errores vinculados a sus campos mediante `aria-invalid` y `aria-describedby`.
 
@@ -46,13 +46,19 @@ Son necesidades de diseño, no categorías que la persona deba declarar. Cualqui
 ### 7. Lector pantalla
 - Preparado con etiquetas asociadas, un h1 por pantalla, nombres accesibles para los profesionales y regiones de estado. La compatibilidad con NVDA/JAWS debe validarse manualmente.
 - La lectura por voz es opcional y usa `speechSynthesis`; la información permanece escrita.
-- Los avatares decorativos se ocultan al lector; las horas se agrupan bajo una etiqueta y el video tiene subtítulos y transcripción.
+- Los retratos ilustrativos se ocultan al lector; las horas se agrupan bajo una etiqueta y el video tiene subtítulos y transcripción.
 
 ### 8. Multimedia
 - **Catálogo de ejercicios guiados:** videos MP4 con locución y audio real procedentes de un canal médico especializado único (**FisioOnline**), cubriendo hombro, rodilla y respiración diafragmática.
 - **Subtítulos sincronizados:** archivos WebVTT vinculados mediante `<track kind="captions">` para seguimiento visual y personas con discapacidad auditiva.
 - **Transcripción textual completa:** panel desplegable accesible (`<details>`) con los pasos clave y la transcripción literal de la locución.
 - **Voz asistida:** opción para escuchar la transcripción por síntesis de voz (`speechSynthesis`) para personas con discapacidad visual o fatiga visual.
+- **Miniaturas contextualizadas:** imágenes extraídas de los propios videos reemplazan el dibujo genérico; el video usa la miniatura que corresponde a cada ejercicio.
+
+### Información visual y fuentes
+- Las fichas de profesionales muestran especialidad, enfoque, horario y acceso directo al mismo formulario de cita. Nombres, horarios y retratos son referenciales para la práctica; las fotografías son ilustrativas y no representan a profesionales reales del IESS.
+- La página del centro usa una fotografía del Hospital de Guaranda del [Plan Médico Funcional publicado por el IESS](https://www.iess.gob.ec/documents/10162/3321619/PMF+HOSPITAL+GUARANDA.pdf). Dirección y teléfono se tomaron del [directorio oficial de unidades médicas](https://www.iess.gob.ec/es/mapa-de-unidades-medicas). No se anuncia un horario que no esté comprobado.
+- El número completo de cédula se pide en el formulario porque es un dato habitual de identificación, pero se elimina antes de guardar la cita de esta sesión. El formulario valida formato de diez dígitos; no consulta registros oficiales ni verifica a una persona real.
 
 ## Cómo probarlo
 1. `cd frontend && npm run dev`

@@ -19,10 +19,10 @@ test("recordatorios ordenados: excluye citas pasadas, canceladas y atendidas", (
   assert.deepEqual(obtenerProximasCitas([], ahora), []);
 });
 
-test("solo acepta los ultimos cuatro digitos", () => {
-  assert.equal(validarIdentificador("1234"), true);
-  assert.equal(validarIdentificador("0201234567"), false);
-  assert.equal(validarIdentificador("12a4"), false);
+test("solicita los diez dígitos de la cédula", () => {
+  assert.equal(validarIdentificador("0201234567"), true);
+  assert.equal(validarIdentificador("1234"), false);
+  assert.equal(validarIdentificador("02012345a7"), false);
 });
 
 test("filtra dias no laborables y horas ocupadas", () => {
