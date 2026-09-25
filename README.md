@@ -47,6 +47,7 @@ Desde «Mis citas» → «Datos y privacidad» se pueden cargar dos citas fictic
 - `public/ejercicios/`: videos, subtítulos y miniaturas extraídas de esos videos.
 - `public/profesionales/`: retratos ilustrativos generados para las fichas ficticias.
 - `public/centro/`: fotografía institucional del Hospital de Guaranda.
+- `public/inicio/`: fotografía ilustrativa generada para la portada; no representa un centro ni personal real del IESS.
 - `docs/`: charter, mapa de navegación, análisis IHM y protocolo de evaluación.
 - `diagramas/` y `entregas-docente/`: material de las entregas académicas.
 

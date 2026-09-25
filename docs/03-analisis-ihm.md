@@ -56,6 +56,7 @@ Son necesidades de diseño, no categorías que la persona deba declarar. Cualqui
 - **Miniaturas contextualizadas:** imágenes extraídas de los propios videos reemplazan el dibujo genérico; el video usa la miniatura que corresponde a cada ejercicio.
 
 ### Información visual y fuentes
+- La portada reemplaza el dibujo abstracto por una escena ilustrativa de rehabilitación. La solicitud conserva el lugar principal y muestra sus tres pasos reales. Fotografías de ejercicios, profesionales y centro funcionan como accesos visuales, con texto visible para no depender solo de la imagen.
 - Las fichas de profesionales muestran especialidad, enfoque, horario y acceso directo al mismo formulario de cita. Nombres, horarios y retratos son referenciales para la práctica; las fotografías son ilustrativas y no representan a profesionales reales del IESS.
 - La página del centro usa una fotografía del Hospital de Guaranda del [Plan Médico Funcional publicado por el IESS](https://www.iess.gob.ec/documents/10162/3321619/PMF+HOSPITAL+GUARANDA.pdf). Dirección y teléfono se tomaron del [directorio oficial de unidades médicas](https://www.iess.gob.ec/es/mapa-de-unidades-medicas). No se anuncia un horario que no esté comprobado.
 - El número completo de cédula se pide en el formulario porque es un dato habitual de identificación, pero se elimina antes de guardar la cita de esta sesión. El formulario valida formato de diez dígitos; no consulta registros oficiales ni verifica a una persona real.

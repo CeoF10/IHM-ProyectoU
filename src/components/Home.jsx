@@ -13,33 +13,16 @@ export function ServiceIcon({ type }) {
   return <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">{paths[type] || paths.calendar}</svg>;
 }
 
-function MovementIllustration() {
-  return <figure className="movement-art">
-    <svg viewBox="0 0 260 270" role="img" aria-labelledby="movement-title">
-      <title id="movement-title">Ilustración de movilidad de hombro</title>
-      <circle cx="130" cy="135" r="112" fill="#EAF1F8" />
-      <path d="M50 157a92 92 0 0 1 151-75" fill="none" stroke="var(--primary-mid)" strokeWidth="8" strokeLinecap="round" />
-      <path d="m190 71 14 8-2-16" fill="none" stroke="var(--primary-mid)" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="119" cy="85" r="18" fill="var(--primary)" />
-      <path d="M114 106c-10 17-13 41-8 60l-26 38m30-38 38 12 13 32m-52-68-25-9-19 27m31-28 25-21 31-23m-63 90 44 2" fill="none" stroke="var(--primary-dark)" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M178 70a65 65 0 0 1 32 50" fill="none" stroke="var(--primary)" strokeWidth="3" strokeDasharray="5 8" strokeLinecap="round" />
-      <circle cx="211" cy="125" r="5" fill="var(--primary-mid)" />
-      <path d="M65 223h132" stroke="var(--primary)" strokeWidth="3" strokeLinecap="round" opacity=".35" />
-    </svg>
-  </figure>;
-}
+const destacados = [
+  { target: "especialistas", title: "Profesionales", description: "Encuentra tu especialidad.", image: "professional" },
+  { target: "ejercicios", title: "Ejercicios guiados", description: "Videos y pasos a tu ritmo.", image: "exercise" },
+  { target: "centros", title: "Centro de atención", description: "Ubicación y contacto en Guaranda.", image: "center" },
+];
 
-const groups = [
-  { title: "Antes de tu cita", items: [
-    ["especialistas", "people", "Profesionales"],
-    ["calendario", "calendar", "Horarios"],
-    ["centros", "place", "Centro de atención"],
-  ] },
-  { title: "Para continuar", items: [
-    ["ejercicios", "exercise", "Ejercicios"],
-    ["recordatorios", "reminder", "Recordatorios"],
-    ["registro", "register", "Mis datos"],
-  ] },
+const accesos = [
+  ["calendario", "calendar", "Horarios disponibles"],
+  ["recordatorios", "reminder", "Recordatorios"],
+  ["registro", "register", "Mis datos"],
 ];
 
 export default function Home({ onNavigate, onStart, titleRef }) {
@@ -48,31 +31,44 @@ export default function Home({ onNavigate, onStart, titleRef }) {
     <section className="home-intro" aria-labelledby="home-title">
       <div className="home-copy">
         <p className="location-label">Rehabilitación en Guaranda</p>
-        <h1 id="home-title" ref={titleRef} tabIndex={-1}>Tu cita de rehabilitación.</h1>
-        <p className="home-description">Elige un profesional y un horario. Confirma al final.</p>
+        <h1 id="home-title" ref={titleRef} tabIndex={-1}>Tu atención empieza aquí.</h1>
+        <p className="home-description">Solicita tu cita de rehabilitación con pasos claros y a tu ritmo.</p>
       </div>
-      <MovementIllustration />
+      <figure className="home-visual">
+        <img src="/inicio/rehabilitacion-ilustrativa.png" alt="Una fisioterapeuta acompaña a una adulta mayor durante un ejercicio de movilidad" />
+        <figcaption>Imagen ilustrativa</figcaption>
+      </figure>
       <form className="booking-start" onSubmit={(event) => { event.preventDefault(); onStart(especialidad); }}>
-        <span className="booking-symbol"><ServiceIcon type="calendar" /></span>
-        <h2>Solicitar cita</h2>
-        <label htmlFor="home-specialty">Especialidad <span className="optional">(opcional)</span></label>
-        <select id="home-specialty" value={especialidad} onChange={(event) => setEspecialidad(event.target.value)}>
-          <option value="">Elegir durante la solicitud</option>
-          {[...new Set(especialistas.map(item => item.especialidad))].map(item => <option key={item}>{item}</option>)}
-        </select>
+        <div className="booking-heading"><span className="booking-symbol"><ServiceIcon type="calendar" /></span><h2>Solicitar cita</h2></div>
+        <div className="booking-field"><label htmlFor="home-specialty">Especialidad <span className="optional">(opcional)</span></label>
+          <select id="home-specialty" value={especialidad} onChange={(event) => setEspecialidad(event.target.value)}>
+            <option value="">Elegir durante la solicitud</option>
+            {[...new Set(especialistas.map(item => item.especialidad))].map(item => <option key={item}>{item}</option>)}
+          </select></div>
         <button className="booking-action" type="submit">Empezar solicitud</button>
       </form>
+    </section>
+    <section className="home-steps" aria-label="Cómo solicitar una cita">
+      <h2>Una solicitud, tres pasos</h2>
+      <ol><li><span>1</span>Tus datos</li><li><span>2</span>Profesional</li><li><span>3</span>Fecha y hora</li></ol>
     </section>
     <section className="returning-patient" aria-labelledby="returning-title">
       <div className="returning-icon"><ServiceIcon type="calendar" /></div>
       <div><h2 id="returning-title">¿Ya tienes una cita?</h2></div>
       <button className="btn-secondary" onClick={() => onNavigate("historial")}>Ver mis citas</button>
     </section>
-    <div className="service-groups">{groups.map(group => <section key={group.title} className="service-group">
-      <h2>{group.title}</h2>
-      <div className="service-links">{group.items.map(([target, icon, title]) => <button className="service-link" key={target} onClick={() => onNavigate(target)}>
-        <span className="service-icon"><ServiceIcon type={icon}/></span><span><strong>{title}</strong></span><span className="service-chevron" aria-hidden="true">›</span>
+    <section className="home-discover" aria-labelledby="discover-title">
+      <h2 id="discover-title">Explora tu atención</h2>
+      <div className="home-feature-grid">{destacados.map((item) => <button className="home-feature" key={item.target} type="button" onClick={() => onNavigate(item.target)}>
+        <span className={`home-feature-image feature-${item.image}`} aria-hidden="true" />
+        <span className="home-feature-copy"><strong>{item.title}</strong><small>{item.description}</small></span>
+        <span className="home-feature-arrow" aria-hidden="true">›</span>
       </button>)}</div>
-    </section>)}</div>
+    </section>
+    <section className="home-more" aria-labelledby="home-more-title"><h2 id="home-more-title">Más opciones</h2>
+      <div className="home-more-links">{accesos.map(([target, icon, title]) => <button className="service-link" key={target} type="button" onClick={() => onNavigate(target)}>
+        <span className="service-icon"><ServiceIcon type={icon}/></span><strong>{title}</strong><span className="service-chevron" aria-hidden="true">›</span>
+      </button>)}</div>
+    </section>
   </div>;
 }
