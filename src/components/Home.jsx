@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { especialistas } from "../data/mock";
+import { assetUrl } from "../utils/assets";
 
 export function ServiceIcon({ type }) {
   const paths = {
@@ -35,7 +36,7 @@ export default function Home({ onNavigate, onStart, titleRef }) {
         <p className="home-description">Solicita tu cita de rehabilitación con pasos claros y a tu ritmo.</p>
       </div>
       <figure className="home-visual">
-        <img src="/inicio/rehabilitacion-ilustrativa.png" alt="Una fisioterapeuta acompaña a una adulta mayor durante un ejercicio de movilidad" />
+        <img src={assetUrl("inicio/rehabilitacion-ilustrativa.png")} alt="Una fisioterapeuta acompaña a una adulta mayor durante un ejercicio de movilidad" />
         <figcaption>Imagen ilustrativa</figcaption>
       </figure>
       <form className="booking-start" onSubmit={(event) => { event.preventDefault(); onStart(especialidad); }}>

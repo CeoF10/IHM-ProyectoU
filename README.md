@@ -2,6 +2,8 @@
 
 Aplicación React y Vite para explorar la atención de rehabilitación en Guaranda. Es una demostración de Interacción Hombre–Máquina: no está conectada al IESS y no crea citas reales.
 
+**Sitio publicado:** [ver el prototipo en GitHub Pages](https://ceof10.github.io/IHM-ProyectoU/).
+
 La cabecera usa el [logotipo publicado por el IESS](https://www.iess.gob.ec/wp-content/themes/s5_business_line/images/s5_logo.png) y el azul `#004394` de su [portal oficial](https://www.iess.gob.ec/). La identidad se usa como referencia académica; el contenido, los profesionales y los horarios de esta aplicación son simulados.
 
 La solicitud de cita usa **un solo recorrido de tres pasos** para todas las personas: datos, profesional y fecha/hora. Después muestra un resumen antes de confirmar. Quien necesite ayudas puede ampliar el texto, aumentar los controles, activar alto contraste o usar la lectura por voz. El diseño se orienta a personas jóvenes, adultos mayores y personas con discapacidad visual o motriz sin pedirles que se clasifiquen.

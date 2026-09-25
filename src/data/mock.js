@@ -1,3 +1,5 @@
+import { assetUrl } from "../utils/assets.js";
+
 export const especialistas = [
   { id: 1, nombre: "Dra. María Toaza", especialidad: "Fisioterapia", enfoque: "Movilidad y recuperación funcional", horario: "Lun–vie · 08:00 a 11:30", dias: [1, 2, 3, 4, 5], horas: ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30"] },
   { id: 2, nombre: "Dr. Carlos Bayas", especialidad: "Traumatología", enfoque: "Articulaciones y lesiones musculoesqueléticas", horario: "Lun, mié y vie · 14:00 a 15:00", dias: [1, 3, 5], horas: ["14:00", "14:30", "15:00"] },
@@ -18,9 +20,9 @@ export const ejercicios = [
     especialista: "Mikel Junquera",
     nivel: "Básico - Recuperación",
     duracion: "3:13 min",
-    video: "/ejercicios/movilidad-hombro.mp4",
-    poster: "/ejercicios/movilidad-hombro.jpg",
-    vtt: "/ejercicios/movilidad-hombro.vtt",
+    video: assetUrl("ejercicios/movilidad-hombro.mp4"),
+    poster: assetUrl("ejercicios/movilidad-hombro.jpg"),
+    vtt: assetUrl("ejercicios/movilidad-hombro.vtt"),
     desc: "Rutina de 3 estiramientos para recuperar amplitud de movimiento articular y aliviar sobrecargas.",
     pasos: [
       "Aducción interna: cruza el brazo hacia el hombro contrario y ejerce una ligera tracción en el codo.",
@@ -36,9 +38,9 @@ export const ejercicios = [
     especialista: "Equipo FisioOnline",
     nivel: "Inicial - Fase temprana",
     duracion: "2:24 min",
-    video: "/ejercicios/fortalecimiento-rodilla.mp4",
-    poster: "/ejercicios/fortalecimiento-rodilla.jpg",
-    vtt: "/ejercicios/fortalecimiento-rodilla.vtt",
+    video: assetUrl("ejercicios/fortalecimiento-rodilla.mp4"),
+    poster: assetUrl("ejercicios/fortalecimiento-rodilla.jpg"),
+    vtt: assetUrl("ejercicios/fortalecimiento-rodilla.vtt"),
     desc: "Activación isométrica y propioceptiva para rodilla post-inmovilización o debilidad muscular.",
     pasos: [
       "Contracción isométrica: contrae el cuádriceps 2 segundos apretando hacia la base y relaja. 10 repeticiones.",
@@ -55,9 +57,9 @@ export const ejercicios = [
     especialista: "Equipo FisioOnline",
     nivel: "Todos los niveles",
     duracion: "3:54 min",
-    video: "/ejercicios/respiracion-diafragmatica.mp4",
-    poster: "/ejercicios/respiracion-diafragmatica.jpg",
-    vtt: "/ejercicios/respiracion-diafragmatica.vtt",
+    video: assetUrl("ejercicios/respiracion-diafragmatica.mp4"),
+    poster: assetUrl("ejercicios/respiracion-diafragmatica.jpg"),
+    vtt: assetUrl("ejercicios/respiracion-diafragmatica.vtt"),
     desc: "Guía práctica para activar el diafragma, mejorar la oxigenación y relajar la caja torácica.",
     pasos: [
       "Postura: túmbate boca arriba con rodillas flexionadas y pies planos sobre el suelo.",
@@ -74,7 +76,7 @@ export const centroInfo = {
   subtitulo: "Dr. Humberto del Pozo Saltos",
   direccion: "Augusto Chávez S/N, vía a Ambato, Guaranda, Bolívar",
   telefono: "03 298 2019",
-  foto: "/centro/hospital-basico-guaranda.jpg",
+  foto: assetUrl("centro/hospital-basico-guaranda.jpg"),
   fuente: "https://www.iess.gob.ec/es/mapa-de-unidades-medicas",
   fuenteFoto: "https://www.iess.gob.ec/documents/10162/3321619/PMF+HOSPITAL+GUARANDA.pdf",
 };

@@ -6,6 +6,7 @@ import Icon from "./components/Icon";
 import { especialistas, centroInfo } from "./data/mock";
 import { borradorVacio, crearCitasDemo, generarCodigo, obtenerHorariosDisponibles, quitarDatosSensibles } from "./utils/appointments";
 import { fragmentarTexto, mensajeErrorVoz } from "./utils/voice";
+import { assetUrl } from "./utils/assets";
 
 const preferenciasIniciales = { textoGrande: false, altoContraste: false, botonesGrandes: false };
 
@@ -541,7 +542,7 @@ export default function App() {
       <header className="top">
         <div className="header-inner">
           <div className="brand">
-            <img className="brand-logo" src="/iess-logo.png" alt="IESS" width="112" height="42" />
+            <img className="brand-logo" src={assetUrl("iess-logo.png")} alt="IESS" width="112" height="42" />
             <span className="brand-divider" aria-hidden="true" />
             <span className="brand-service"><strong>Rehabilitación</strong><small>Guaranda</small></span>
           </div>
