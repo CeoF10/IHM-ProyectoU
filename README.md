@@ -56,6 +56,4 @@ Desde «Mis citas» → «Datos y privacidad» se pueden cargar dos citas fictic
 - `diagramas/`: caso de uso editable de la versión actual.
 - `entregas-docente/`: PDF originales de las tareas 3, 4 y 5, más la presentación complementaria.
 
-La [evaluación con participantes y lector de pantalla](docs/04-protocolo-evaluacion.md) sigue pendiente. Las pruebas técnicas no sustituyen esa evaluación.
-
 La dirección y el teléfono del centro proceden del [directorio de unidades médicas del IESS](https://www.iess.gob.ec/es/mapa-de-unidades-medicas). La fotografía de la fachada procede del [Plan Médico Funcional del Hospital de Guaranda](https://www.iess.gob.ec/documents/10162/3321619/PMF+HOSPITAL+GUARANDA.pdf), publicado por el IESS. Las fichas de profesionales y sus retratos son referenciales, no identifican a personal real.
