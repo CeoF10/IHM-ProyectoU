@@ -87,3 +87,15 @@ El problema del proyecto es que las personas puedan conocer la atención de reha
 ### Elementos comunes que sí responden al proyecto
 
 Las tres referencias priorizan navegación reconocible, identidad visual consistente, accesos a servicios y llamadas a la acción distinguibles. Adaptamos esos patrones en el menú principal, el acceso “Solicitar una cita”, las tarjetas de servicios, la búsqueda de profesionales y el calendario de cupos. Mantenemos el lenguaje y el alcance de un prototipo académico, sin presentar los datos simulados como servicios oficiales en línea.
+
+## Relación con las tareas 3, 4 y 5 del primer parcial
+
+| Tarea | Idea del trabajo | Aplicación en el prototipo |
+|---|---|---|
+| 3: comparación de portales de salud | Identidad azul constante, acceso destacado a citas y búsqueda de especialistas. | Cabecera y acciones azules, cita accesible desde varias páginas, búsqueda por nombre y filtros de especialidad. |
+| 4: casos de uso del paciente | Registro, solicitud, especialistas, disponibilidad, historial, reprogramación, cancelación, ejercicios, recordatorios, centro y accesibilidad. | Todas estas opciones son navegables. La solicitud valida datos, comprueba cupos y presenta el resumen antes de confirmar; la lectura de ese resumen es opcional. |
+| 5: elementos GUI | Menú «Más», tarjetas, tabla, selector de fecha, indicador de pasos, diálogos, mensajes de estado, controles multimedia y ajustes activables. | Cada elemento aparece en la función que describe el cuadro, con etiquetas y manejo por teclado. |
+
+La Tarea 4 menciona tres presentaciones del formulario y la Tarea 5 menciona cuatro dígitos de cédula. Se corrigieron esas decisiones para el reto actual: **un único recorrido accesible para los tres perfiles** y un campo de **diez dígitos** que se valida y se elimina antes de guardar la cita. Las preferencias de accesibilidad son ayudas del mismo formulario, no versiones separadas.
+
+En las páginas de apoyo, el historial permite filtrar por estado y conserva las acciones de reprogramar y cancelar. Los recordatorios muestran cuándo es la visita y enlazan con su detalle. El centro ofrece dirección, teléfono, mapa y enlace al directorio oficial para confirmar horarios vigentes; no se inventa un horario institucional.

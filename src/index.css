@@ -948,12 +948,16 @@ input:focus-visible, select:focus-visible { border-color:var(--primary); }
 .appointment-card dl { grid-template-columns:repeat(3,minmax(0,1fr)); }
 .appointment-card dl div { background:#f2f6fb; }
 .appointment-actions { padding-top:12px; border-top:1px solid var(--line); }
+.appointment-filters { display:flex; flex-wrap:wrap; gap:8px; margin:-5px 0 20px; }
+.appointment-list:has(.appointment-card:only-child) { grid-template-columns:minmax(0,1fr); }
 .session-details { margin-top:24px; }
 
 .reminder-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin:0 0 24px; }
 .reminder-item { display:flex; gap:16px; align-items:flex-start; padding:20px; border:1px solid var(--line); border-radius:5px 14px 5px 14px; }
 .reminder-item h3 { margin:2px 0 4px; color:var(--primary-dark); }
 .reminder-item p { margin:3px 0; color:var(--muted); font-size:14px; }
+.reminder-item .reminder-when { margin:0 0 6px; color:var(--primary); font-size:12px; font-weight:800; }
+.reminder-item .context-link { margin-top:10px; text-align:left; }
 .reminder-item .ui-icon { width:15px; height:15px; vertical-align:-3px; }
 .visit-prep { margin-top:22px; padding:20px 24px; border-left:4px solid var(--primary); background:var(--blue-soft); }
 .visit-prep h3 { margin:0 0 12px; color:var(--primary-dark); font-size:19px; }
@@ -997,7 +1001,7 @@ input:focus-visible, select:focus-visible { border-color:var(--primary); }
 .pref-alto-contraste .calendar-table thead small { color:#fff !important; }
 .pref-alto-contraste .appointment-date, .pref-alto-contraste .reminder-date { background:#fff; color:#000; }
 .professional-filters { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 4px; }
-.filter-chip { min-height:38px; padding:7px 12px; border:1px solid #c5d3e3; border-radius:999px; background:#fff; color:var(--primary-dark); font-size:13px; font-weight:750; }
+.filter-chip { min-height:44px; padding:7px 12px; border:1px solid #c5d3e3; border-radius:999px; background:#fff; color:var(--primary-dark); font-size:13px; font-weight:750; }
 .filter-chip.active { border-color:var(--primary); background:var(--primary); color:#fff; }
 .filter-chip:hover { border-color:var(--primary); }
 .center-next { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-top:22px; padding:19px 24px; border-radius:5px 12px 5px 12px; background:var(--blue-soft); }
@@ -1006,6 +1010,7 @@ input:focus-visible, select:focus-visible { border-color:var(--primary); }
 .center-next .btn-primary { flex:none; margin:0; }
 .pref-alto-contraste .center-next { background:#050505 !important; border:2px solid #fff; }
 .pref-alto-contraste .filter-chip.active { background:#fff !important; color:#000 !important; }
+.pref-alto-contraste .reminder-item .reminder-when { color:#fff !important; }
 .pref-alto-contraste .calendar-table tbody tr, .pref-alto-contraste .calendar-table tbody tr:nth-child(even) { background:#050505 !important; }
 .pref-alto-contraste .calendar-table tbody th, .pref-alto-contraste .calendar-table tbody td { color:#fff !important; border-bottom:1px solid #fff !important; }
 .pref-alto-contraste .transcripcion-box { background:#050505 !important; border:2px solid #fff !important; }
@@ -1038,7 +1043,7 @@ input:focus-visible, select:focus-visible { border-color:var(--primary); }
   .booking-context { grid-template-columns:1fr; }
   .booking-context img { height:180px; }
   .guiada .docs { grid-template-columns:1fr; }
-  .appointment-card dl { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .appointment-card dl { grid-template-columns:1fr; }
   .reminder-list { grid-template-columns:1fr; }
   .profile-page { grid-template-columns:1fr; gap:0; }
   .profile-intro { min-height:0; padding:24px; }

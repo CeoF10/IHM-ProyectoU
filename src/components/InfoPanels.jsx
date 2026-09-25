@@ -10,14 +10,48 @@ function Recordatorios({ citas, onNavigate }) {
     return () => clearInterval(reloj);
   }, []);
   const proximas = obtenerProximasCitas(citas, ahora);
+  const hoy = fechaLocal(ahora);
+  const manana = new Date(ahora);
+  manana.setDate(manana.getDate() + 1);
+  const fechaManana = fechaLocal(manana);
   return <section className="card reminders-page" aria-labelledby="recordatorios-titulo">
     <div className="section-heading"><h2 id="recordatorios-titulo">Próximas citas</h2><p>Ten a mano los detalles de tu siguiente visita.</p></div>
     {proximas.length === 0 ? <div className="empty-state" role="status"><span className="empty-state-icon"><Icon name="calendar" /></span><div><h3>Todo al día</h3><p>Cuando confirmes una cita, verás aquí su fecha y hora.</p><button type="button" className="btn-primary" onClick={() => onNavigate("cita")}>Solicitar cita</button></div></div> :
       <ul className="reminder-list">{proximas.map((cita) => <li key={cita.id} className="reminder-item">
-        <div className="reminder-date"><strong>{new Date(cita.fecha + "T12:00:00").toLocaleDateString("es-EC", { day: "2-digit" })}</strong><span>{new Date(cita.fecha + "T12:00:00").toLocaleDateString("es-EC", { month: "short" })}</span></div>
-        <div><h3>{cita.esp}</h3><p>{cita.especialista}</p><p><Icon name="clock" /> <time dateTime={cita.fecha + "T" + cita.hora}>{cita.hora}</time> · {centroInfo.nombre}</p></div>
+        <time className="reminder-date" dateTime={cita.fecha} aria-label={new Date(cita.fecha + "T12:00:00").toLocaleDateString("es-EC", { dateStyle: "full" })}><strong>{new Date(cita.fecha + "T12:00:00").toLocaleDateString("es-EC", { day: "2-digit" })}</strong><span>{new Date(cita.fecha + "T12:00:00").toLocaleDateString("es-EC", { month: "short" })}</span></time>
+        <div><p className="reminder-when">{cita.fecha === hoy ? "Hoy" : cita.fecha === fechaManana ? "Mañana" : new Date(cita.fecha + "T12:00:00").toLocaleDateString("es-EC", { weekday: "long", day: "numeric", month: "long" })}</p><h3>{cita.esp}</h3><p>{cita.especialista}</p><p><Icon name="clock" /> <time dateTime={cita.fecha + "T" + cita.hora}>{cita.hora}</time> · {centroInfo.nombre}</p><button type="button" className="context-link" onClick={() => onNavigate("historial")}>Ver detalle de la cita</button></div>
       </li>)}</ul>}
     <div className="visit-prep"><h3>Antes de acudir</h3><ul><li><Icon name="check" /> Documento de identidad</li><li><Icon name="check" /> Indicación médica</li><li><Icon name="check" /> Llega 15 minutos antes</li></ul></div>
+  </section>;
+}
+
+function Historial({ citas, perfil, onNavigate, onReschedule, onChangeStatus, onLoadDemo, onClearData }) {
+  const [filtro, setFiltro] = useState("Todas");
+  const opciones = ["Todas", "Pendiente", "Atendida", "Cancelada"];
+  const visibles = citas.filter((cita) => filtro === "Todas" || (cita.estado || "Pendiente") === filtro);
+
+  return <section className="card" aria-labelledby="historial-titulo">
+    <div className="section-heading"><h2 id="historial-titulo">Tus citas</h2><p>{citas.length ? `${citas.length} ${citas.length === 1 ? "cita registrada" : "citas registradas"}` : "Consulta aquí tus solicitudes."}</p></div>
+    {citas.length > 0 && <div className="appointment-filters" role="group" aria-label="Filtrar citas por estado">{opciones.map((opcion) => <button key={opcion} type="button" className={filtro === opcion ? "filter-chip active" : "filter-chip"} aria-pressed={filtro === opcion} onClick={() => setFiltro(opcion)}>{opcion === "Todas" ? "Todas" : opcion === "Pendiente" ? "Pendientes" : opcion === "Atendida" ? "Atendidas" : "Canceladas"}</button>)}</div>}
+    {citas.length === 0 ? <div className="empty-state"><span className="empty-state-icon"><Icon name="calendar" /></span><div><h3>Aún no tienes citas</h3><p>Elige un profesional y un horario para empezar.</p><button type="button" className="btn-primary" onClick={() => onNavigate("cita")}>Solicitar una cita</button></div></div> : visibles.length === 0 ? <div className="empty-state" role="status"><span className="empty-state-icon"><Icon name="calendar" /></span><div><h3>No hay citas {filtro.toLowerCase()}s</h3><p>Prueba con otro estado para ver tus citas.</p></div></div> : <div className="appointment-list">
+      {visibles.map((cita) => <article className="appointment-card" key={cita.id}>
+        <div className="appointment-top"><time className="appointment-date" dateTime={cita.fecha} aria-label={new Date(cita.fecha + "T12:00:00").toLocaleDateString("es-EC", { dateStyle: "full" })}><strong>{new Date(cita.fecha + "T12:00:00").toLocaleDateString("es-EC", { day: "2-digit" })}</strong><span>{new Date(cita.fecha + "T12:00:00").toLocaleDateString("es-EC", { month: "short" })}</span></time><div><p className="eyebrow">Código {cita.codigo}</p>{cita.esDemo && <p className="demo-record-label">Cita de ejemplo</p>}<h3>{cita.esp}</h3><p>{cita.especialista}</p></div></div>
+        <dl><div><dt>Paciente</dt><dd>{cita.nombre}</dd></div><div><dt>Hora</dt><dd>{cita.hora}</dd></div><div><dt>Estado</dt><dd><span className={`status status-${(cita.estado || "Pendiente").toLowerCase()}`}>{cita.estado || "Pendiente"}</span></dd></div></dl>
+        <div className="appointment-actions">
+          <button type="button" className="btn-secondary" onClick={() => onReschedule(cita)} disabled={cita.estado !== "Pendiente"}>Reprogramar</button>
+          <button type="button" className="btn-danger" onClick={() => {
+            if (window.confirm("¿Cancelar esta cita? El horario volverá a estar disponible.")) onChangeStatus(cita.id, "Cancelada");
+          }} disabled={cita.estado !== "Pendiente"}>Cancelar cita</button>
+        </div>
+      </article>)}
+    </div>}
+    <details className="session-details"><summary>Datos y privacidad</summary>
+      <p>Las citas y tus datos de registro permanecen en esta pestaña. La cédula no se guarda.</p>
+      <div className="session-actions"><button type="button" className="btn-secondary" onClick={onLoadDemo}>Cargar citas de ejemplo</button>
+      <button type="button" className="btn-danger" disabled={citas.length === 0 && !perfil} onClick={() => {
+        if (window.confirm("¿Eliminar las citas y tus datos guardados en esta pestaña?")) onClearData();
+      }}>Borrar mis datos</button></div>
+    </details>
   </section>;
 }
 
@@ -98,28 +132,7 @@ export default function InfoPanels({ seccion, citas, perfil, onSaveProfile, onCh
     </div><p className="availability-hint">Los horarios concretos se muestran al continuar con la cita.</p>
   </section>;
 
-  if (seccion === "historial") return <section className="card" aria-labelledby="historial-titulo">
-    <div className="section-heading"><h2 id="historial-titulo">Tus citas</h2><p>{citas.length ? `${citas.length} ${citas.length === 1 ? "cita registrada" : "citas registradas"}` : "Consulta aquí tus solicitudes."}</p></div>
-    {citas.length === 0 ? <div className="empty-state"><span className="empty-state-icon"><Icon name="calendar" /></span><div><h3>Aún no tienes citas</h3><p>Elige un profesional y un horario para empezar.</p><button type="button" className="btn-primary" onClick={() => onNavigate("cita")}>Solicitar una cita</button></div></div> : <div className="appointment-list">
-      {citas.map((cita) => <article className="appointment-card" key={cita.id}>
-        <div className="appointment-top"><div className="appointment-date"><strong>{new Date(cita.fecha + "T12:00:00").toLocaleDateString("es-EC", { day: "2-digit" })}</strong><span>{new Date(cita.fecha + "T12:00:00").toLocaleDateString("es-EC", { month: "short" })}</span></div><div><p className="eyebrow">Código {cita.codigo}</p>{cita.esDemo && <p className="demo-record-label">Cita de ejemplo</p>}<h3>{cita.esp}</h3><p>{cita.especialista}</p></div></div>
-        <dl><div><dt>Paciente</dt><dd>{cita.nombre}</dd></div><div><dt>Hora</dt><dd>{cita.hora}</dd></div><div><dt>Estado</dt><dd><span className={`status status-${(cita.estado || "Pendiente").toLowerCase()}`}>{cita.estado || "Pendiente"}</span></dd></div></dl>
-        <div className="appointment-actions">
-          <button type="button" className="btn-secondary" onClick={() => onReschedule(cita)} disabled={cita.estado !== "Pendiente"}>Reprogramar</button>
-          <button type="button" className="btn-danger" onClick={() => {
-            if (window.confirm("¿Cancelar esta cita? El horario volverá a estar disponible.")) onChangeStatus(cita.id, "Cancelada");
-          }} disabled={cita.estado !== "Pendiente"}>Cancelar cita</button>
-        </div>
-      </article>)}
-    </div>}
-    <details className="session-details"><summary>Datos y privacidad</summary>
-      <p>Las citas y tus datos de registro permanecen en esta pestaña. La cédula no se guarda.</p>
-      <div className="session-actions"><button type="button" className="btn-secondary" onClick={onLoadDemo}>Cargar citas de ejemplo</button>
-      <button type="button" className="btn-danger" disabled={citas.length === 0 && !perfil} onClick={() => {
-        if (window.confirm("¿Eliminar las citas y tus datos guardados en esta pestaña?")) onClearData();
-      }}>Borrar mis datos</button></div>
-    </details>
-  </section>;
+  if (seccion === "historial") return <Historial citas={citas} perfil={perfil} onNavigate={onNavigate} onReschedule={onReschedule} onChangeStatus={onChangeStatus} onLoadDemo={onLoadDemo} onClearData={onClearData} />;
 
   if (seccion === "ejercicios") return <EjerciciosSection />;
 
@@ -131,7 +144,7 @@ export default function InfoPanels({ seccion, citas, perfil, onSaveProfile, onCh
       <div className="center-hero-copy"><p className="eyebrow">Red de atención IESS · Bolívar</p><h2 id="centros-titulo">{centroInfo.nombre}</h2><p>{centroInfo.subtitulo}</p></div></div>
     <div className="center-details"><div><h3>Ubicación</h3><address>{centroInfo.direccion}</address><a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(centroInfo.nombre + " " + centroInfo.direccion)}`} target="_blank" rel="noreferrer">Ver cómo llegar ↗</a></div>
       <div><h3>Contacto</h3><p><a href={`tel:+593${centroInfo.telefono.replace(/\D/g, "").slice(1)}`}>{centroInfo.telefono}</a></p><a href={centroInfo.fuente} target="_blank" rel="noreferrer">Consultar directorio del IESS ↗</a></div>
-      <div><h3>Antes de acudir</h3><p>Ten a mano tu documento de identidad y la indicación médica correspondiente.</p></div></div>
+      <div><h3>Horarios de atención</h3><p>Consulta el horario vigente antes de acudir.</p><a href={centroInfo.fuente} target="_blank" rel="noreferrer">Ver información oficial ↗</a></div></div>
     <div className="center-next"><div><h3>¿Listo para solicitar una cita?</h3><p>Elige un profesional y continúa con la solicitud guiada.</p></div><button type="button" className="btn-primary" onClick={() => onNavigate("cita")}>Solicitar cita</button></div>
     <p className="image-credit">Imagen: <a href={centroInfo.fuenteFoto} target="_blank" rel="noreferrer">archivo institucional del IESS</a>.</p>
   </section>;

@@ -66,3 +66,10 @@ No se deben inventar resultados. Esta tabla se completa únicamente después de 
 - Chromium: abre las ocho funciones simuladas, completa una cita en el formulario único, comprueba que el identificador no se guarda y permite iniciar una cita nueva después de salir de una reprogramación.
 
 Estas comprobaciones técnicas no sustituyen una prueba de usabilidad ni una validación con lector de pantalla.
+
+## Comprobación de páginas de apoyo — 25 de septiembre de 2026
+
+- `npm test`, `npm run lint` y `npm run build`: aprobados.
+- En Chromium a 390 px y 320 px con letra y botones grandes, las ocho secciones se muestran sin desbordamiento horizontal de página.
+- El historial filtra por estado. Al cancelar una cita, aparece en «Canceladas» y deja de mostrarse como recordatorio futuro.
+- El enlace de un recordatorio abre el historial. La página del centro enlaza el directorio oficial para consultar horarios vigentes.
